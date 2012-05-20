@@ -386,7 +386,7 @@ The original rainbow table paper demonstration, by Oechslin, constructed a rainb
 A side channel attack is an attack on the physical implementation of the cryptosystem the main attacks are based on the fact there is 'effecient' ways to do certain mathmatical functions on a processor based on what they values they are processing this is usually branching dependent on wether the bit 0 or 1. 
 
 \subsection{Power Attacks}
-There are two types of Power Attacks using Simple Power Analysis(SPA) is just watching the trace of the power flowing through the processer while it is performing the functions this shows the load on the processer and from that work out what action is being done. Peter Kocher outlined using DES in ?? showing that you can see the distinct rounds in the DES structure. 
+There are two types of Power Attacks using Simple Power Analysis(SPA) is just watching the trace of the power flowing through the processer while it is performing the functions this shows the load on the processer and from that work out what action is being done. Peter Kocher outlined using DES in \cite{Differential Power Analysis} showing that you can see the distinct rounds in the DES structure. 
 
 \begin{figure}
     \includegraphics[width=\textwidth]{SPAtrace.png}
@@ -412,6 +412,8 @@ The correct value of $K_s$ can be identified from the spikes in the differential
 \end{figure}
 
 {\color{red}{TALK ABOUT DPA AGAINST HMAC-MD5}}
+
+There is the belief that using there is a possibility to use DPA on a HMAC-MD5 based on a smartcard, due to the ease of control timing cycles and power input. This is outlined in \cite{JiriKur}. However this turns out to be false due which was put down to the 
 
 Resources:
 MIT Crypto lectures: http://cseweb.ucsd.edu/~mihir/papers/gb.pdf
