@@ -375,10 +375,13 @@ The original rainbow table paper demonstration, by Oechslin, constructed a rainb
 \end{figure}
 
 \subsection{Defending Against Tables}
+Pre-image attacks using tables are extremely effective at cracking hashes for passwords in the their password domain, however protecting stored passwords against these tables is simple.
 
+Instead of storing just the hash, $h$, of the password $p$ a salted hash is stored. Where $s$ is some fixed-known string (salt) a salted hash can simple be made by concatenating the hash and salt, $$h = H(p||s),$$ or $$h = H(H(p) || s).$$
+The salt need not be kept a secret as it should not be of little help when attempting to calculate a pre-image. It is feasible to create a hash table which takes into account this salt. Using a single salt however is not a particularly safe approach as a single hash table could release the passwords to an entire database. Usually a salted hash and the salt are stored together, but importantly a salt will ideally be different for each password, possibly the timestamp of sign-up for example, ensuring the individual salts ensures that a fresh table would have to be created to crack each password and this is simple a brute force approach.
 
-
-
+Another alternative would be to make the construction of such a table inconceivable. This can be achieved by a process called key-strectching. This process repeatedly applies the hashing function (often in excess of 1000) times to the password, this has the effect of increasing the amount of time it takes to compute each hash in the chain. This has a drastic impact on the total time taken to produce the table.This approach is susceptable to a very specific type of attack, one using custom hardware. 
+Using FPGAs it is possible to construct hardware circuit which are able to unroll these repetition loops and therefore circumvent the added complexity added by the repetition stretching, this is a very specialised attack however and only viable when a lot of information is known about the encryption system.
 
 
 
