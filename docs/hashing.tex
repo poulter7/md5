@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage{epstopdf}
+\usepackage{caption}
 \usepackage{color}
 \usepackage{url}
 %\usepackage{helvet} %To the untrained eye helvetica and arial are pretty much identical
@@ -330,8 +331,8 @@ A rainbow table has $k$ different reduction functions $R_k$ and these are applie
 Using a rainbow table is still quite simple, given a hash, $h$ to attack, the last reduction function, $R_k$ is applied and the table is searched for a chain which has a matching endpoint. This is an attempt at guessing that the hash was the last hash the table saw.
 If none is found then the preceeding reduction $R_{k-1}$ is applied, followed by the hash and $R_k$. This is a guess that the $h$ was the penultimate hash seen in each table chain. This continues until a hit is found. Once it is the starting point is selected and the chain is replayed until $h$ is found, the preceeding password is the password which hashed to $h$, much like the hash-chain table.
 
-The original rainbow table paper demonstration, by Oechslin, constructed a rainbow table and accompanying program to crack Windows passwords. The program and wider principle behind rainbow tables has been subsequently used to attempt to demonstrate the tractability of pre-image attacks given that distributed resources are now available. Projects including \texttt{freerainbowtables.com} use many clients to distribute the work of generating hash chains. These projects have created a wealth of tables which these writers believe, though they do not break the hash's cryptographic one-way nature, do undermine the security of existing hashes and should raise questions about the continued use of algorithms such as MD5.
 
+The original rainbow table paper demonstration, by Oechslin, constructed a rainbow table and accompanying program to crack Windows passwords. The program and wider principle behind rainbow tables has been subsequently used to attempt to demonstrate the tractability of pre-image attacks given that distributed resources are now available. Projects including \texttt{freerainbowtables.com} use many clients to distribute the work of generating hash chains. These projects have created a wealth of tables which these writers believe, though they do not break the hash's cryptographic one-way nature, do undermine the security of existing hashes and should raise questions about the continued use of algorithms such as MD5.
 
 \begin{figure}
     \begin{center}
@@ -377,15 +378,46 @@ The original rainbow table paper demonstration, by Oechslin, constructed a rainb
 
 
 
+
+
+
+
 \section{Side Channel Attacks}
 A side channel attack is an attack on the physical implementation of the cryptosystem the main attacks are based on the fact there is 'effecient' ways to do certain mathmatical functions on a processor based on what they values they are processing this is usually branching dependent on wether the bit 0 or 1. 
 
 \subsection{Power Attacks}
 There are two types of Power Attacks using Simple Power Analysis(SPA) is just watching the trace of the power flowing through the processer while it is performing the functions this shows the load on the processer and from that work out what action is being done. Peter Kocher outlined using DES in ?? showing that you can see the distinct rounds in the DES structure. 
 
+\begin{figure}
+    \includegraphics[width=\textwidth]{SPAtrace.png}
+    \caption{Trace showing a SPA of an entire DES operation.}
+    \label{fig:desRound}
+\end{figure}
+The other type is a Differential Power Analysis where many different checks are used and then a difference is applied to only show the 'significant' changes. Looking at DES in a round of the encryption the 8 S-Boxes each take 6 subkey bits and 6 bits of the R side and produce 4 bits of output as described in the {\color{red} OTHER PAPER}. The selection function $D(C,b,K_s)$ is defined as the value of the bit $0 \le b < 32$ of the DES L side before working out the 16th round for the cipher text $C$, where the 6 key bits entering the S box corresponding to the bit $b$ are $0 \le K_s < 2^6$. If we have the wrong key bits we will get the bit $b$ right half of the time due to chance. 
+
+To use the DPA attack first takes $m$ samples of cipher text and power traces $T_{1..m}[1..k]$ containing $k$ samples each and evaluates $D$ for them and seperates them into two groups $g_0$ and $g_1$ where the evaluations for $b$ are 0 and 1 respectivly. Then $\Delta_D$ is worked out for the means of the traces from $g_0$ and $g_1$. Then $\Delta_D[j]$ is the average over $C_{1..m}$ of the change due to the value of the selection function $D$ on the power consumption at point $j$. 
+\begin{align}
+    \Delta_D[j] &= \frac{\sum_{i=1}^mD(C_i,b,K_s)T_i[j]}{\sum_{i=1}^mD(C_i,b,K_s)} -  \frac{\sum_{i=1}^m(1-D(C_i,b,K_s))T_i[j]}{\sum_{i=1}^m(1-D(C_i,b,K_s))}\\
+    &\approx 2( \frac{\sum_{i=1}^mD(C_i,b,K_s)T_i[j]}{\sum_{i=1}^mD(C_i,b,K_s)} - \frac{\sum_{i=1}^mT_i[j]}{m}) 
+\end{align}
+
+If $K_s$ is correct however, the calulation of $D$ will be correct for all the cipher text. As a result the $\Delta_D[j]$ will approach the effect of the target bit on the power consumption as $m \rightarrow \infty$.
+
+The correct value of $K_s$ can be identified from the spikes in the differential traces. Four values of $b$ correspond to each S Box, providing validation of key block guesses. If you find all the eight $K_s$ gives you the entire 48-bit round subkey. The remaining 8 key bits can be found either by exhaustive search or the attack could be focused on another round of the DES sequence. Triple DES keys can be found by analyzing the outer DES operation, finding the key to decrypt the ciphertext and then attacking the next DES key. Showin in figure~\ref{fig:desResult}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{DPATraces.png}
+    \caption{Traces showing the average trace then one with a correct guess of $K_s$ and the bottom two with incorrect guesses with $m = 1000$}
+    \label{fig:desResult}
+\end{figure}
+
+{\color{red}{TALK ABOUT DPA AGAINST HMAC-MD5}}
+
 Resources:
 MIT Crypto lectures: http://cseweb.ucsd.edu/~mihir/papers/gb.pdf
 Timing Attacks on Implementations of Diffie-Hellman, RSA, DSS, and Other Systems, P. Kocher.: http://www.cryptography.com/public/pdf/TimingAttacks.pdf
+$Differential Power Analysis: http://www.cryptography.com/public/pdf/TimingAttacks.pdf
+Algorithms for differential power analysis of the cryptographic smart cards: https://is.muni.cz/th/98692/fi_b/bc_thesis_Jiri_Kur.pdf$
 Merkle thesis: http://www.merkle.com/papers/Thesis1979.pdf 
 MD5 spec: http://tools.ietf.org/html/rfc1321 
 @misc{cryptoeprint:2004:199,
