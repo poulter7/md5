@@ -348,7 +348,7 @@ $\lim_{m \rightarrow \infty} \Delta_D[j] \approx 0$, which will cause the differ
 
 If $K_s$ is correct however, the calulation of $D$ will be correct for all the cipher text. As a result the $\Delta_D[j]$ will approach the effect of the target bit on the power consumption as $m \rightarrow \infty$.
 
-The correct value of $K_s$ can be identified from the spikes in the differential traces. Four values of $b$ correspond to each S Box, providing validation of key block guesses. If you find all the eight $K_s$ gives you the entire 48-bit round subkey. The remaining 8 key bits can be found either by exhaustive search or the attack could be focused on another round of the DES sequence. Triple DES keys can be found by analyzing the outer DES operation, finding the key to decrypt the ciphertext and then attacking the next DES key. Showin in figure~\ref{fig:desResult}
+The correct value of $K_s$ can be identified from the spikes in the differential traces. Four values of $b$ correspond to each S Box, providing validation of key block guesses. If you find all the eight $K_s$ gives you the entire 48-bit round subkey. The remaining 8 key bits can be found either by exhaustive search or the attack could be focused on another round of the DES sequence. Triple DES keys can be found by analyzing the outer DES operation, finding the key to decrypt the ciphertext and then attacking the next DES key. Shown in figure~\ref{fig:desResult} is 4 traces a reference trace followed by correct $K_s$ and two incorrect one.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{DPATraces.png}
@@ -363,7 +363,7 @@ Resources:
 MIT Crypto lectures: http://cseweb.ucsd.edu/~mihir/papers/gb.pdf
 Timing Attacks on Implementations of Diffie-Hellman, RSA, DSS, and Other Systems, P. Kocher.: http://www.cryptography.com/public/pdf/TimingAttacks.pdf
 Differential Power Analysis: http://www.cryptography.com/public/pdf/TimingAttacks.pdf
-Algorithms for differential power analysis of the cryptographic smart cards: https://is.muni.cz/th/98692/fi_b/bc_thesis_Jiri_Kur.pdf
+Algorithms for differential power analysis of the cryptographic smart cards: https://is.muni.cz/th/98692/fi\_b/bc\_thesis\_Jiri\_Kur.pdf
 Merkle thesis: http://www.merkle.com/papers/Thesis1979.pdf 
 MD5 spec: http://tools.ietf.org/html/rfc1321 
 @misc{cryptoeprint:2004:199,
