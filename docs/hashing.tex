@@ -51,7 +51,6 @@
 %\cite{http://tools.ietf.org/html/rfc4270}
 %MD5 First announced in 1991
 
-
 \section{Hashing a message}
 Hashing functions are able to take a variable length message and from it create a fixed length output, a hashing function will always hash the same input to the same output. Cryptographic hashing functions, here-in simply  have two distinct properties which mean they are used in a range of security applications, they should be collision-free and one-way.
 
@@ -287,10 +286,10 @@ As the number of chains created increases the likelihood of collisions increases
 % Draw blocks, inputs and outputs
 
     \def\sp{1.5}
-    \node[p] at (0,0) (hash0) {$s$};
+    \node[p] at (-2*\sp,-1) (hash0) {$s$};
     \node[p] at (7*\sp,0) (hash7) {$e$};
-    \node[h] at (1*\sp,0) (hash1) {$h_1$};
-    \node[p] at (2*\sp,0) (hash2) {$p_2$};
+    \node[h] at (-1*\sp,-1) (hash1) {$h_1$};
+    \node[p] at (0*\sp,-1) (hash2) {$p_2$};
     \node[h] at (3*\sp,0) (hash3) {$h_2$};
     \node[h] at (4*\sp,0) (hash4) {$h_{k-1}$};
     \node[p] at (5*\sp,0) (hash5) {$p_{k}$};
@@ -303,50 +302,86 @@ As the number of chains created increases the likelihood of collisions increases
     \draw[->] (hash6) -- node[below] {\scriptsize{$R$}} (hash7);
     \draw[->, dashed] (hash3) -- (hash4);
 
-    \node[h] at (1*\sp, 1) (hashp) {$h'_1$};
-    \node[p] at (2*\sp, 1) (hashpa) {$p'_2$};
-    \node[p] at (0,1) (hashs) {$s'$};
+    \node[p] at (-2*\sp,1) (hashs) {$s'$};
+    \node[h] at (-1*\sp, 1) (hashp) {$h'_1$};
+    \node[p] at (0*\sp, 1) (hashpa) {$p'_2$};
+    \node[h] at (1*\sp, 1) (hashpa1) {$h'_2$};
+    \node[p] at (2*\sp, 1) (hashpa2) {$p'_3$};
     \node[] at (3*\sp, 1) (hashpb) {};
     \draw[->] (hashp) -- node[below]{\scriptsize{$H$}} (hashpa);
-    \draw[->] (hashpa) -- node[above]{\scriptsize{$R$}} (hash3);
+    \draw[->] (hashpa2) -- node[above]{\scriptsize{$R$}} (hash3);
     \draw[->] (hashs) -- node[below]{\scriptsize{$R$}} (hashp);
+    \draw[->] (hashpa1) -- node[above]{\scriptsize{$H$}} (hashpa2);
+    \draw[->] (hashpa) -- node[below]{\scriptsize{$R$}} (hashpa1);
 
 \end{tikzpicture}
 \end{center}
-\caption{This is a demonstration of two chains colliding, from the point where $H$ is applied to $p'_2$ no more useful work is performed by this chain.}
+\caption{This is a demonstration of two chains colliding, from the point where $H$ is applied to $p'_3$ no more useful work is performed by the chain starting at $s'$.}
 \label{fig:col}
 \end{figure}
 
 Selecting an appropriate reduction function is a critical part of the design of a hash-chain table. It is important to know a lot about the possible possword domain as constraining the search to this area will be more useful and a smaller table may be generated covering the likely password space with less gaps, increasing the chance of finding the hash and its inverse. It is also important to generate the correct distribution of messages, it may be inefficient to create many short passwords if the space is up to 9 character for example. Needless to say designing an appropriate reduction function is difficult.
 
 \paragraph{Rainbow Tables}
-The largest shortcoming of simple hash-chain tables is that the number of collisions increases as the table size increases. To counter-act this in 2003 Oechslin\cite{Oechslin}.proposed a method for using multiple reduction function to drastically reduce the effect that a single collision has on the production of a chain in a table. This approach is called a rainbow table and is the dominant approach to launching pre-image attacks on hashign functions today.
+The largest shortcoming of simple hash-chain tables is that the number of collisions increases as the table size increases. To counter-act this in 2003 Oechslin\cite{Oechslin} proposed a method for using multiple reduction function to drastically reduce the effect that a single collision has on the production of a chain in a table. This approach is called a rainbow table and is the dominant approach to launching pre-image attacks on hashing functions today.
 
-\section{Side Channel Attacks}
-A side channel attack is based an attack on the physical implementation of a cryptosystem rather than the algorithm itself. We'll be looking at a couple of methods mainly power attacks due to it being better suited for breaking hashing. We will have a brief explanation of timing attacks.
+A rainbow table has $k$ different reduction functions $R_k$ and these are applied sequentially, alternating between hash and reduction application. This greatly reduces the damage caused by a collision, the collisions will still occur as shown in fiure \ref{rain}, but in the next step the application of a different reduction function will diverge the two chains. It is possible to still have a collision; if both chains merge on the same step, this will tie the two chains in to exploring the same state-space, but this is, much rarer than the collision case in the simple hash-chain table.
 
-\subsection{Power Attacks}
-There are two types of Power Attacks using Simple Power Analysis(SPA) is just watching the trace of the power flowing through the processer while it is performing the functions this shows the load on the processer and from that work out what action is being done. Peter Kocher outlined using DES in Figure~\ref{fig:desRound} showing that you can see the distinct rounds in the DES structure. 
+Using a rainbow table is still quite simple, given a hash, $h$ to attack, the last reduction function, $R_k$ is applied and the table is searched for a chain which has a matching endpoint. This is an attempt at guessing that the hash was the last hash the table saw.
+If none is found then the preceeding reduction $R_{k-1}$ is applied, followed by the hash and $R_k$. This is a guess that the $h$ was the penultimate hash seen in each table chain. This continues until a hit is found. Once it is the starting point is selected and the chain is replayed until $h$ is found, the preceeding password is the password which hashed to $h$, much like the hash-chain table.
 
-The other type is a Differential Power Analysis where many different checks are used and then a difference is applied to only show the 'significant' changes. Looking at DES in a round of the encryption the 8 S-Boxes each take 6 subkey bits and 6 bits of the R side and produce 4 bits of output as described in the {\color{red} OTHER PAPER}. The selection function $D(C,b,K_s)$ is defined as the value of the bit $0 \le b < 32$ of the DES L side before working out the 16th round for the cipher text $C$, where the 6 key bits entering the S box corresponding to the bit $b$ are $0 \le K_s < 2^6$. If we have the wrong key bits we will get the bit $b$ right half of the time due to chance. 
+The original rainbow table paper demonstration, by Oechslin, constructed a rainbow table and accompanying program to crack Windows passwords. The program and wider principle behind rainbow tables has been subsequently used to attempt to demonstrate the tractability of pre-image attacks given that distributed resources are now available. Projects including \texttt{freerainbowtables.com} use many clients to distribute the work of generating hash chains. These projects have created a wealth of tables which these writers believe, though they do not break the hash's cryptographic one-way nature, do undermine the security of existing hashes and should raise questions about the continued use of algorithms such as MD5.
 
-To use the DPA attack first takes $m$ samples of cipher text and power traces $T_{1..m}[1..k]$ containing $k$ samples each and evaluates $D$ for them and seperates them into two groups $g_0$ and $g_1$ where the evaluations for $b$ are 0 and 1 respectivly. Then $\Delta_D$ is worked out for the means of the traces from $g_0$ and $g_1$. Then $\Delta_D[j]$ is the average over $C_{1..m}$ of the change due to the value of the selection function $D$ on the power consumption at point $j$. 
-\begin{align}
-    \Delta_D[j] &= \frac{\sum_{i=1}^mD(C_i,b,K_s)T_i[j]}{\sum_{i=1}^mD(C_i,b,K_s)} -  \frac{\sum_{i=1}^m(1-D(C_i,b,K_s))T_i[j]}{\sum_{i=1}^m(1-D(C_i,b,K_s))}\\
-    &\approx 2( \frac{\sum_{i=1}^mD(C_i,b,K_s)T_i[j]}{\sum_{i=1}^mD(C_i,b,K_s)} - \frac{\sum_{i=1}^mT_i[j]}{m}) 
-\end{align}
-
-If $K_s$ is incorrect, the bit computed by $D$ will be correct for $\approx\frac{1}{2}$ of the cipher texts $C_i$. Thus, if $K_s$ is incorrect, 
-$\lim_{m \rightarrow \infty} \Delta_D[j] \approx 0$, which will cause the differential trace to become flat. 
-
-If $K_s$ is correct however, the calulation of $D$ will be correct for all the cipher text. As a result the $\Delta_D[j]$ will approach the effect of the target bit on the power consumption as $m \rightarrow \infty$
-
-{\color{red}{TALK ABOUT DPA AGAINST HMAC-MD5}}
 
 \begin{figure}
-    {\color{red}graphic from DPA report}
-    \label{fig:desRound}
+    \begin{center}
+    \begin{tikzpicture}[>=latex']
+
+% Draw blocks, inputs and outputs
+
+    \def\sp{1.5}
+    \node[p] at (-2*\sp,-1) (hash0) {$s$};
+    \node[p] at (7*\sp,1) (hashe1) {$e'$};
+    \node[p] at (7*\sp,-1) (hashe2) {$e$};
+    \node[h] at (-1*\sp,-1) (hash1) {$h_1$};
+    \node[p] at (0*\sp,-1) (hash2) {$p_2$};
+    \node[h] at (1*\sp,-1) (hash3) {$h_2$};
+    \node[p] at (-2*\sp,1) (hashs) {$s'$};
+    \node[p] at (4*\sp,-1) (hashb) {$p_3$};
+    \node[p] at (4*\sp,1)  (hashc) {$p'_2$};
+
+    \node[h] at (-1*\sp, 1) (hashp) {$h'_1$};
+    \node[p] at (2*\sp, 0) (hashpa2) {$p_c$};
+    \node[] at (3*\sp, 1) (hashpb) {};
+    \node[h] at (3*\sp,0) (hash6) {$h_{2}$};
+    \draw[->] (hash0) -- node[below] {\scriptsize{$H$}} (hash1);
+    \draw[->] (hash1) -- node[below] {\scriptsize{$R_1$}} (hash2);
+    \draw[->] (hash2) -- node[below] {\scriptsize{$H$}} (hash3);
+    \draw[->] (hash3) -- node[below] {\scriptsize{$R_2$}} (hashpa2.west);
+
+    \draw[->] (hashp) -- node[below]{\scriptsize{$R_1$}} (hashpa2.west);
+    \draw[->] (hashpa2) -- node[below]{\scriptsize{$H$}} (hash6);
+    \draw[->] (hashs) -- node[below]{\scriptsize{$H$}} (hashp);
+    \draw[->] (hash6) -- node[below] {\scriptsize{$R_2$}} (hashb);
+    \draw[->] (hash6) -- node[below] {\scriptsize{$R_3$}} (hashc);
+    \draw[->, dashed] (hashb) -- (hashe2);
+    \draw[->, dashed] (hashc) -- (hashe1);
+
+\end{tikzpicture}
+\end{center}
+\caption{In a rainbow table as there are several reduction functions, as they are applied sequentially any branches merging will likely split on the application of the different reduction function.}
+\label{fig:rain}
 \end{figure}
+
+\subsection{Defending Against Tables}
+
+
+
+\section{Side Channel Attacks}
+A side channel attack is an attack on the physical implementation of the cryptosystem the main attacks are based on the fact there is 'effecient' ways to do certain mathmatical functions on a processor based on what they values they are processing this is usually branching dependent on wether the bit 0 or 1. 
+
+\subsection{Power Attacks}
+There are two types of Power Attacks using Simple Power Analysis(SPA) is just watching the trace of the power flowing through the processer while it is performing the functions this shows the load on the processer and from that work out what action is being done. Peter Kocher outlined using DES in ?? showing that you can see the distinct rounds in the DES structure. 
 
 Resources:
 MIT Crypto lectures: http://cseweb.ucsd.edu/~mihir/papers/gb.pdf
