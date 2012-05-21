@@ -65,14 +65,9 @@ Hashing functions are able to take a variable length message and from it create 
 
 \paragraph{The Random Oracle} An ideal fixed-length hashing function will play the role of a Random Oracle. acts as a theoretically optimal cryptographic primitive. In a Random Oracle, for a given input a truly random output is chosen and the input and corresponding output are recorded. If the same input message is presented to the oracle at a later point the oracle will return the previously generated value, however for each novel input presented a random corresponding output will be generated.\\
 
-\begin{figure}
-Some tikz image
-\caption{Reactions of the theoretical Random Oracle}
-\label{fig:random_oracle}
-\end{figure}
 
 
-There are many cryptographic hash functions, many vary in success at fulfilling the properties described. Yet they are integral cryptographic primitives on which many secure protocols are built. Successful cryptographic functions have many uses. In most operating systems user passwords are not stored in plain text, doing so would allow a user who maliciously gained access to the password store to know a user's password. Instead password hashes are stored and on login a user submits the password, which is hashed and verified against the stored hash, if these match then the user is authorised. {\color{red} or signing digital documents and distinguish two large messages without having to do explicit bit-wise comparison between each document, easily identify matches or inconsistencies. }
+There are many cryptographic hash functions, many vary in success at fulfilling the properties described. Yet they are integral cryptographic primitives on which many secure protocols are built. Successful cryptographic functions have many uses. In most operating systems user passwords are not stored in plain text, doing so would allow a user who maliciously gained access to the password store to know a user's password. Instead password hashes are stored and on login a user submits the password, which is hashed and verified against the stored hash, if these match then the user is authorised. Hashes are used for the signing digital documents and distinguish two large messages without having to do explicit bit-wise comparison between each document, this method provides a method of verifying another's copy of a file and is able to identify matches or inconsistencies.
 
 \section{The Merkle-Damg\r{a}rd Construction}
 The aim is to build a hashing function $H$ which takes an abitrary length message to create a digest, $\{0,1\}^* \xrightarrow{H} \{0,1\}^n$ in the same fashion as a random oracle would. In practice creating a straight-forward hashing or block cipher to take arbitrary input is impractical, most modern hashing functions, take some compression-function and repeatedly apply it to successive blocks of the message.
@@ -158,7 +153,8 @@ The first weakness of the simple MD construction is that once a single collision
 
 Let $H: \{0,1\}^* \rightarrow \{0,1\}^n$ be a hashing function and two distinct messages $m_1$ and $m_2$ are a collision pair, that is $H(m_1) = H(m_2)$, under the simple MD construction it is trivial to generate more collisions by appending the collision-causing message with a common message $x$ producing $H(m_1||x)$, $H(m_2||x)$.  Where $||$ is the concatenation operator.
 
-{\color{red} to protect against this append the length}
+
+
 \label{sec:length}
 
 \section{The MD5 Hashing Function}
@@ -172,7 +168,7 @@ A mandatory ``1'' bit is added to the end of the bit-string
 Padding ``0'' bits are added to the message to make the length, l, $$l \equiv 448 \text{ (mod } 512).$$
 
 \paragraph{Length appending}
-The message will br processed in blocks of 128-bits, to create a 128-bit ouput so the output congruent to 128-bit also. Also it is desirable to include the length-strengthening discussed in \ref{sec:length}. This has the ability to prevent some extention attacks, which the MD construction is weak against.
+The message will be processed in blocks of 128-bits, to create a 128-bit ouput so the output congruent to 128-bit also. Also it is desirable to include the length-strengthening discussed in \ref{sec:length}. This has the ability to prevent some, which the MD construction is weak against. So the bit-string is appended with the 64-bit representation of the number $b$. Now, $$l \equiv 0 \text{ (mod } 512).$$
 
 \paragraph{IV intialisation}
 Once the message has been prepared the MD construction is prepared, the intial vector of the construct ($IV_0$) is
