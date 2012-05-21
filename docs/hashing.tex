@@ -415,14 +415,14 @@ Using FPGAs it is possible to construct hardware circuit which are able to unrol
 A side channel attack is an attack on the physical implementation of the cryptosystem. The main attacks are based on the fact there are efficient ways to do certain mathematical functions on a processor based on the values being processed, this is usually branching dependent on whether particular bits are 0 or 1. This approach has been widely applied on 3-DES schemes and only tried occasionally, with limited success to traditional hashes, such as MD5.
 
 \subsection{Power Attacks}
-There are two types of Power Attacks. Using Simple Power Analysis(SPA) is simply watching the trace of the power flowing through the processor while it is performing the functions this shows the load on the processor and from that work out what action is being done. Peter Kocher outlined using DES in \cite{kocherPower} showing that you can see the distinct rounds in the DES structure. 
+There are two types of Power Attacks. Using Simple Power Analysis(SPA) is simply watching the trace of the power flowing through the processor while it is performing the functions this shows the load on the processor and from that work out what action is being done. Peter Kocher outlined using DES in\cite{Systems} showing that you can see the distinct rounds in the DES structure. 
 
 \begin{figure}
     \includegraphics[width=\textwidth]{SPAtrace.png}
     \caption{Trace showing a SPA of an entire DES operation.}
     \label{fig:desRound}
 \end{figure}
-The other type is a Differential Power Analysis where many different checks are used and then a difference is applied to only show the `significant' changes. Looking at DES in a round of the encryption the 8 S-Boxes each take 6 subkey bits and 6 bits of the R side and produce 4 bits of output as described in \cite{otherPaper}. The selection function $D(C,b,K_s)$ is defined as the value of the bit $0 \le b < 32$ of the DES L side before working out the 16th round for the cipher text $C$, where the 6 key bits entering the S box corresponding to the bit $b$ are $0 \le K_s < 2^6$. If we have the wrong key bits we will get the bit $b$ right half of the time due to chance. 
+The other type is a Differential Power Analysis where many different checks are used and then a difference is applied to only show the `significant' changes. Looking at DES in a round of the encryption the 8 S-Boxes each take 6 subkey bits and 6 bits of the R side and produce 4 bits of output as described in \cite{Kocher1999}. The selection function $D(C,b,K_s)$ is defined as the value of the bit $0 \le b < 32$ of the DES L side before working out the 16th round for the cipher text $C$, where the 6 key bits entering the S box corresponding to the bit $b$ are $0 \le K_s < 2^6$. If we have the wrong key bits we will get the bit $b$ right half of the time due to chance. 
 
 To use the DPA attack first takes $m$ samples of cipher text and power traces $T_{1..m}[1..k]$ containing $k$ samples each and evaluates $D$ for them and seperates them into two groups $g_0$ and $g_1$ where the evaluations for $b$ are 0 and 1 respectively. Then $\Delta_D$ is worked out for the means of the traces from $g_0$ and $g_1$. Then $\Delta_D[j]$ is the average over $C_{1..m}$ of the change due to the value of the selection function $D$ on the power consumption at point $j$. 
 \begin{align}
@@ -444,13 +444,15 @@ The correct value of $K_s$ can be identified from the spikes in the differential
 There is the belief that using there is a possibility to use DPA on a HMAC-MD5 based on a smartcard, due to the ease of control timing cycles and power input. This is outlined in \cite{JiriKur}. However this turns out to be false and is blamed on the equipment used as this was set up with standard equipment not specialist equipment, it is suggested specialist hardware could improve the results. This would suggest, at the current time, that this type of attack best suited for to attacks on DES or RSA as described above.
 
 \subsection{Timing Attacks}
-There are quite a few different types of timing attacks which essentially take advantage of algorithms taking shortcuts to save computing power based on what it is processing. One of which is for computing $R = y^x \mod n$, where $x$ is $w$ bits long, which is used in RSA, is shown in~\ref{alg:expSquare} where $X_k$ means the $k^{th}$ bit of $x$ as you can see if the bit of the exponent is 1 we have to compute an extra multiplication step which gives us the possibility of watching out for how long a pass through the algorithm takes which would give us if $X_k$ is 0 or 1, which means we can rebuild the exponent. This is critical in RSA as $y$ is the cipher text which can be eavesdropped upon and $n$ is public. This is outlined in \cite{crosbyTiming} as a possibility to crack RSA over the internet based on large number of observations to counteract the noise of the timing data.
+There are quite a few different types of timing attacks which essentially take advantage of algorithms taking shortcuts to save computing power based on what it is processing. One of which is for computing $R = y^x \mod n$, where $x$ is $w$ bits long, which is used in RSA, is shown in~\ref{alg:expSquare} where $X_k$ means the $k^{th}$ bit of $x$ as you can see if the bit of the exponent is 1 we have to compute an extra multiplication step which gives us the possibility of watching out for how long a pass through the algorithm takes which would give us if $X_k$ is 0 or 1, which means we can rebuild the exponent. This is critical in RSA as $y$ is the cipher text which can be eavesdropped upon and $n$ is public. This is outlined in \cite{Crosby2009} as a possibility to crack RSA over the internet based on large number of observations to counteract the noise of the timing data.
 
-Another type of timing attack is due to how checks of equality of iterables are usually lazily evaluated, as in they cut out when they find they are not equal as there is no gain from finishing the comparison due to no additional information gained. This has lead to the ability to see \emph{how many bits we got right} \cite{lessonInTiming} this shows how problems can occur essentially outside of how secure any crypto algorithm is if there is side channel leak of information due to implementation either in the hardware running it or the exact way programmatically the algorithm is implemented.
+Another type of timing attack is due to how checks of equality of iterables are usually lazily evaluated, as in they cut out when they find they are not equal as there is no gain from finishing the comparison due to no additional information gained. This has lead to the ability to see \emph{how many bits we got right} 
+%\cite{lessonInTiming}
+this shows how problems can occur essentially outside of how secure any crypto algorithm is if there is side channel leak of information due to implementation either in the hardware running it or the exact way programmatically the algorithm is implemented.
 
 
 \begin{algorithm}
-    \caption{Exponentiation By Squaring based off of the explanation in \cite{kocherTiming}}
+    \caption{Exponentiation By Squaring based off of the explanation in \cite{Systems}}
     \label{alg:expSquare}
 \begin{algorithmic}
     \State $S_0 \gets 1$
@@ -466,26 +468,20 @@ Another type of timing attack is due to how checks of equality of iterables are 
 \end{algorithmic}
 \end{algorithm}
 
+\newpage
+\section{Conclusion}
+Hashing functions remain an integral part of many secure systems and are essential to signature verification and fast file comparison. The presence of hash collisions does not make a hash obselete it just means that users of the function should reconsider if the function is still fit for purpose.
+\begin{quotation}
+    \emph{Git uses SHA-1 in a way which has nothing at all to do with security\dots. it's just the best hash you can get\dots it's about the ability to trust your data} - Linus Tovalds on Git
+\end{quotation}
+
+While the security community continues to develop in tandem the latest and greatest hashing functions and publically displays weaknesses in existing algorithms, if developers are mindful of their algorithm choices hashes will continue being very useful tools and are unlikely to be made generally obselete by faster hardware or dedicated cryptanalysis.
+
+\cleardoublepage
 \bibliography{library}
 \bibliographystyle{plain}
 
-Resources:
-
-MIT Crypto lectures: http://cseweb.ucsd.edu/~mihir/papers/gb.pdf
-A Lesson In Timing Attacks: http://codahale.com/a-lesson-in-timing-attacks/
-Timing Attacks on Implementations of Diffie-Hellman, RSA, DSS, and Other Systems, P. Kocher.: http://www.cryptography.com/public/pdf/TimingAttacks.pdf
-Differential Power Analysis: http://www.cryptography.com/public/pdf/DPA.pdf
-Algorithms for differential power analysis of the cryptographic smart cards: https://is.muni.cz/th/98692/fi\_b/bc\_thesis\_Jiri\_Kur.pdf
-Merkle thesis: http://www.merkle.com/papers/Thesis1979.pdf 
-MD5 spec: http://tools.ietf.org/html/rfc1321 
-@misc{cryptoeprint:2004:199,
-    author = {Xiaoyun Wang  and Dengguo Feng and Xuejia Lai and Hongbo Yu},
-    title = {Collisions for Hash Functions MD4, MD5, HAVAL-128 and RIPEMD},
-    howpublished = {Cryptology ePrint Archive, Report 2004/199},
-    year = {2004},
-%    note = {\url{http://eprint.iacr.org/}},
-}
-
+\newpage
 \lstinputlisting[language=Python]{../md5.py}
 
 \end{document}
