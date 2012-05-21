@@ -41,6 +41,16 @@
 \maketitle
 \newpage
 
+\section{Introduction}
+Hashing functions are an important cryptographic primitive; reliable hashes form an important component of many complex and secure protocols. Of the many cryptographic hash functions, many vary in success at fulfilling the criteria necessary for the hash function to be reliable. In this report the criteria which a hashing function should be judged by is described, this accompanies the notion of \emph{computational infeasibility}. This alone presents cryptologists with the first problem of designing these functions, the capability of the adversary is always increasing. This forces constant development of hashing functions, with bigger digest lengths and more `rounds'.
+
+Most common hashes today use a standard construction called the Merkle-Damg\r{a}rd construction. This seemingly simple construction allows digest creation for arbitrary size messages using a fixed compression function, however this structure itself is not perfect.
+
+Extra attention is paid to the MD5 hash, mainly for its relative simplicity when compared to other MD hashes and also for the large amount of cryptanalysis which has been performed on it. Methods of attacking the criteria which the hashing function meets are demonstrated as are methods of defending against these kinds of attacks.
+
+We feel this cryptographic arms-race necessitates the need for a full understanding of the area, as computer professionals are trusted with an ever-increasing amount of personal data, it is important that it is secured correctly.
+An appreciation which make hashing secure and the vulnerabilities leading to breaking them is important so we can endeavour to make more successful hashing functions in the future and protect sensitive data.
+
 %\section{Properties of a hashing function}
 
 %it is easy to compute the hash value for any given message
@@ -68,7 +78,7 @@ A tasking being computationally infeasible refers to an adversary being unable t
 
 
 
-There are many cryptographic hash functions, many vary in success at fulfilling the properties described. Yet they are integral cryptographic primitives on which many secure protocols are built. Successful cryptographic functions have many uses. In most operating systems user passwords are not stored in plain text, doing so would allow a user who maliciously gained access to the password store to know a user's password. Instead password hashes are stored and on login a user submits the password, which is hashed and verified against the stored hash, if these match then the user is authorised. Hashes are used for the signing digital documents and distinguishing large files without having to do explicit bit-wise comparison between each file, this method provides a method of verifying another's copy of a file and is able to identify matches or inconsistencies.
+Successful cryptographic functions have many uses. In most operating systems user passwords are not stored in plain text, doing so would allow a user who maliciously gained access to the password store to know a user's password. Instead password hashes are stored and on login a user submits the password, which is hashed and verified against the stored hash, if these match then the user is authorised. Hashes are used for the signing digital documents and distinguishing large files without having to do explicit bit-wise comparison between each file, this method provides a method of verifying another's copy of a file and is able to identify matches or inconsistencies.
 
 \section{The Merkle-Damg\r{a}rd Construction}
 Various constructs can build a hashing function, however the most popular over the last two decades, which is the construction underlying the most dominant hashes in use today, is the Merkle-Damg\r{a}rd (MD) construction \cite{Merkle1979}.
