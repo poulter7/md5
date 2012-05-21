@@ -32,48 +32,44 @@
 \maketitle
 \newpage
 \section{Summary}
-{\color{red}{Executive summary of not more than one page, which summarises the content of the report.}}
+Uses of short-range communication have been on the rise recently with many new technologies being established; such as Bluetooth, RFID and NFC. These innovations have allowed many new applications within near field identities, including ePassports, electronic identity cards and so-called e-money transactions. The introduction of ePassports has become a major concern to many security experts. Although their encryption methods (3DES, SHA-1, SHA-2 etc.) have been proven in many other security areas, some of the techniques for initiating secure conversations and verifying authenticity of electronic identities are flawed.
 
-Uses of short-range communication have been on the rise recently with many new technologies being established; such as Bluetooth, RFID and NFC. These innovations have allowed many new applications within near field identities, including ePassports, electronic identity cards and so-called e-money transactions. The introduction of ePassports has become a major concern to many security experts. Although their encryption methods (3DES, SHA-1, SHA-2 etc.) have been proven in many other security areas, some of the techniques for initiating conversations and verifying authenticity of electronic identities are flawed.
-
-Luckily these vulnerabilities have not gone unnoticed. Protection from many of the threats such as skimming, forgery and unauthorised access are being constantly updated, by encompassing some the most advanced security techniques. 
+Thankfully these vulnerabilities have not gone unnoticed. Protection from many of the threats such as skimming, forgery and unauthorised access are being constantly updated by encompassing some the most advanced security techniques. 
 This report will delve into the current technology being utilised to protect your electronic identity held within your ePassport. Initially we will discuss the idea of near field identities, and their social implications, we will then further focus on the ePassport technology and the protection that is embedded within. We will provide an overview of some of the classical encryption methods used, and compare authentication protocols that are being continually updated by many European countries since the introduction of ePassport technology. Further we will look at cases where vulnerabilities have been uncovered and how newly proposed techniques resolve the obsolete protocol's vulnerabilities.
 
-\section{Introduction}
-{\color{red}{Introduce the idea of near field identities, where they are likely to lead 
-TODO}}
+%\section{Introduction}
+%{\color{red}{Introduce the idea of near field identities, where they are likely to lead 
+%TODO}}
 
 \section{Relevance}
 Why is this material relevant to the security landscape now?
 With the upcoming technology of ePassports being enforced within many countries including the UK, and the biometric data that will soon be held within, it is important to review what effects security breaches could have on unsuspecting victims.
 
-The introduction of ePassports began in Malaysia in March 1998, actually predating the internationally accepted standard \cite{Avoine:2008wf}. ePassports have now become compulsory within many countries, including the vast majority of EU countries. The concern of aviation security spiked after the attacks of 9/11. Passports and visas are just one security aspect that was due an overhaul.
+The introduction of ePassports began in Malaysia in March 1998, actually pre-dating the internationally accepted standard \cite{Avoine:2008wf}. ePassports have now become compulsory within many countries, including the vast majority of EU countries. The concern of aviation security spiked after the attacks of 9/11. Passports and visas are just one security aspect that was due an overhaul.
 
 However not everyone has welcomed the introduction of electronic identities. Many privacy activists have voiced their concern over the invasion of privacy brought about by collecting personal data and storing it electronically \cite{Blundo:2008vs}. This has been particularly brought on by governments discussing the possibility of storing more sensitive biometric data within electronic identities, including fingerprint scans and iris scans. Indeed some governments, including Germany \cite{JRC:2008ws}, have begun compiling a centralised database of this biometric data. If this database was breached, the repercussions on the privacy of the individuals could be enormous. 
 
-Gaining an understanding of the technologies currently in use, and standards that are being proposed for adding additional security layers is important if we wish to maintain our privacy, as we shall shortly see, the standards which are currently being used have been shown to possess a variety of security failures. Since ePassports are already being issued, securing these failures is an important requirement before more sensitive biometric data is additionally stored. Currently adult passports in the UK do not expire for 10 years following their issuance. Advances in computer forensics are likely to continue to sore in this period, it is important therefore to iron out potential pitfalls in the security of these systems if they are to stand a chance against the hackers of 2022. 
+Gaining an understanding of the technologies currently in use, and standards that are being proposed for adding additional security layers is important if we wish to maintain our privacy, as we shall shortly see, the standards which are currently being used have been shown to possess a variety of security failures. Since ePassports are already being issued, securing these failures is an important requirement before more sensitive biometric data is additionally stored. Currently adult passports in the UK do not expire for 10 years following their issuance. Advances in computer forensics are likely to continue to soar in this period, it is important therefore to iron out potential pitfalls in the security of these systems if they are to stand a chance against the hackers of 2022. 
 
 \section{Technical background}
-{\color{red}{This section could cover the history of the topic, the mathematical background, or even the political context.
-Prior to ePassports security}}
 
 \subsection{RFID}
 \label{sec:RFID}
-Almost every countries producing ePassport's are building them around a data communication technology known as Radio Frequency Identification (RFID). This type of technology, often known as a ``tag" \cite{Juels:2005wf}, transmits its data wirelessly. The International Civil Aviation Organisation (ICAO) specifies a specific standard that must be met by all RFID tags used as ePassport chips (ISO 14443). 
+Almost every country developing ePassports is building them around a data communication technology known as Radio Frequency Identification (RFID). This type of technology, often known as a ``tag" \cite{Juels:2005wf}, transmits its data wirelessly. The International Civil Aviation Organisation (ICAO) specifies a specific standard that must be met by all RFID tags used as ePassport chips (ISO 14443). 
 
 RFID tags can come in two major forms, passive or active. The difference between the two forms is primarily the source of energy that consumes in order to carry out data transfers. An active RFID tag has an internal power source that powers the transmission of data. These are generally more expensive than their passive counterpart, last for a shorter length of time, and can transmit their data are longer distance.
 
 The ISO 14443 standard is a passive RFID. This means that the chip has no internal source of power and should use power supplied by a reader interacting with the chip. Typically passive RFID tags can transmit up to 40ft however the ISO 14443 is typically designed to transmit only 10cm. This is by design, the shorter the distance the ePassport can be read at, the closer a potential attacker needs to be to the physical chip to interact with it. Many researchers have published results of eavesdropping on an existing transmission from up to 30ft, and initiating a transmission from 1.3ft \cite{Kfir:2005tv,Yoshida:2004ta} with modified card readers readily available from online shops.
 
-An alternative technology for data transmission, and perhaps more appropriate for high stake security situations such as transmission of sensitive biometric data is contact chips. Contact chips, similarly to your chip and pin chip, require the reader to be in contact with the chip. This effectively removes two of the largest concerns with the use of RFID tags, the ability to eavesdrop on an existing communication, and the ability to skim information from the chip by passing close by it.
+An alternative technology for data transmission, and perhaps more appropriate for high stake security situations such as transmission of sensitive biometric data is contact chips. Contact chips, similarly to ``chip and pin'' chip, require the reader to be in contact with the chip. This effectively removes two of the largest concerns with the use of RFID tags, the ability to eavesdrop on an existing communication, and the ability to skim information from the chip by passing close by it.
 
-\subsection{Hashing?}
+\subsection{Hashing}
 \label{sec:hashing}
-{\color{red}{SHA-1/SHA-2 or refer to the other paper for reference to MD5?}}
+A hash is a data fingerprint. It is the easiest way of confirming that a collection of data is what you expect it to be, without the need for explicit comparison. A hashing function, such as MD5, or the more secure SHA family of hashes, takes an arbitrary length message and creates a fixed digest, $H$: $\{0,1\}^* \rightarrow \{0,1\}^n$ where $n$ is the length of the output and effectively a security factor. Longer hashes from a secure hashing function, are difficult to find collisions for and completely infeasible to reverse.
 
 \subsection{Public Key Infrastructure (PKI)}
 \label{sec:PKI}
-Digital signatures provide certification that a trusted third party believes someone's information to be correct. The document is signed by the private key of the sender, and decrypted using the public key of the sender that has been provided to the receiver. If when decrypted the document is illegible, the public key does not match the private key, thus the either the recipient has the wrong public key, or it was not signed by the private key of the expected sender. If it is legible you can be certain that the signature has not been lifted off another digital document.
+Digital signatures provide certification that a trusted third party believes someone's information to be correct. The document is signed by the private key of the sender and is decrypted using the public key of the sender that has been provided to the receiver. If when decrypted the document is illegible, the public key does not match the private key, then either the recipient has the wrong public key or the document was not signed by the private key of the expected sender. If it is legible you can be certain that the signature has not been lifted off another digital document.
 
 Digital certificates go one step further than this. A third party can sign a document saying that they believe the information within is true. The details are summarised using a hashing function to provide a checksum of the information. The provided information can be verified to be the information that was signed by the third party by simply computing the hash of the information and confirming it matches the hash of the information that was signed.
 
@@ -81,7 +77,7 @@ Public Key Infrastructures (PKI's) serve as a method of managing, distributing a
 
 \section{3DES}
 \label{sec:3DES}
-Triple Data Encryption Algorithm (3DES) is an implementation of the Data Encryption Standard (DES) cipher algorithm three times to each data block we'll go over the basics of DES to help explain 3DES. DES is a block cipher based on a Feistel Network, which takes $d$ arbitary functions $f_1, \ldots , f_d: \{0,1\}^n \rightarrow \{0,1\}^n$, which transformers a bit string to another bitstring, which don't need to be inversable and builds a function $F:\{0,1\}^{2n} \rightarrow \{0,1\}^{2n}$ this function is usually based on a round key approach where a sub-key of a master key is used in progressive rounds to change the function $F$.
+Triple Data Encryption Algorithm (3DES) is an implementation of the Data Encryption Standard (DES) cipher algorithm three times to each data block we'll go over the basics of DES to help explain 3DES. DES is a block cipher based on a Feistel Network, which takes $d$ arbitrary functions $f_1, \ldots , f_d: \{0,1\}^n \rightarrow \{0,1\}^n$, which transformers a bit string to another bitstring, which don't need to be inversable and builds a function $F:\{0,1\}^{2n} \rightarrow \{0,1\}^{2n}$ this function is usually based on a round key approach where a sub-key of a master key is used in progressive rounds to change the function $F$.
 
 As shown in figure~\ref{fig:feistNetwork} the network is built by taking $2n$-bits splitting it into 2 sides $R0$ and $L0$. Then $R0$ goes to $L1$ without any change, then the function $F(K_0)$ is applied to $R0$ then XORed with $L0$ which gives $R1$ this is then repeated down all rounds. Decryption is the same but the functions are applied in reverse order.
 
@@ -92,7 +88,7 @@ As shown in figure~\ref{fig:feistNetwork} the network is built by taking $2n$-bi
     \label{fig:feistNetwork}
 \end{figure}
 
-DES it's self is based on a 16 round Feistel Network where the functions are created from function $F$ which is shown in figure~\ref{fig:functionF} where a 32 bit half block, $R0$, is expanded using function $E$ and $XOR$ed with a 48 bit long subkey, which is created from a master key of 56 bits length. This 48 bit output is then chunked into 8 6 bit groups which are fed into S Boxes which are compression functions which takes 6 bits and outputs 4 bits. This then is $XOR$ed with $L0$ and becomes $R1$ this is then repeated for all 15 other rounds for DES.
+DES itself is based on a 16 round Feistel Network where the functions are created from function $F$ which is shown in figure~\ref{fig:functionF} where a 32-bit half block, $R0$, is expanded using function $E$ and $XOR$ed with a 48-bit long subkey, which is created from a master key of 56 bits length. This 48-bit output is then chunked into 8 6-bit groups which are fed into S Boxes which are compression functions which takes 6 bits and outputs 4 bits. This then is $XOR$ed with $L0$ and becomes $R1$ this is then repeated for all 15 other rounds for DES.
 
 \begin{figure}
     \center
@@ -101,14 +97,14 @@ DES it's self is based on a 16 round Feistel Network where the functions are cre
     \label{fig:functionF}
 \end{figure}
 
-This however was deemed insecure due to the relativly small key space of $2^{56}$ which led to Triple DES to be put foward. There are 3 different keying options to get 3 Keys $K_1,K_2,K_3$
+This however was deemed insecure due to the relativly small key space of $2^{56}$ which led to Triple DES to be put forward. There are 3 different keying options to get 3 Keys $K_1,K_2,K_3$
 \begin{itemize}
-    \item Keying Option 1: Is where all 3 keys are independant.
-    \item Keying Option 2: Is where $K_1$ and $K_2$ are independant, and $K_3 = K_1$.
+    \item Keying Option 1: Is where all 3 keys are independent.
+    \item Keying Option 2: Is where $K_1$ and $K_2$ are independent, and $K_3 = K_1$.
     \item Keying Option 3: Is where all keys are identical, $K_1 = K_2 = K_3$
 \end{itemize}
 
-Using these 3 keys the plain text,$PT$, is encrypted,$E$, using the first,$K_1$, then decrypted,$D$, using the second,$K_2$, then encrypted again using the 3rd,$K_3$, to gain the cipher text,$CT$. The process is reversed to decrypt the message. As long as Keying option 1 is used this increases the key space to $2^{168}$
+Using these 3 keys the plain text,$PT$, is encrypted,$E$, using the first,$K_1$, then decrypted,$D$, using the second,$K_2$, then encrypted again using the 3rd,$K_3$, to gain the cipher text, $CT$. The process is reversed to decrypt the message. As long as Keying option 1 is used this increases the key space to $2^{168}$
 \begin{align}
     CT &= E_{K3}(D_{K2}(E_{K1}(PT)))\\
     PT &= D_{K3}(E_{K2}(D_{K1}(CT)))
@@ -119,7 +115,7 @@ One of the main purposes of an ePassport is providing proof of identity when ent
 
 The data structure currently contains 16 Data Groups, soon to be 18, denoted DG1-DG18 respectively. Many of these Data Groups are not mandatory to conform to ICAO standards, however DG1 (All information printed on the Machine Readable Zone (MRZ) of the passport - basic personal information including name, DOB, passport number etc.) and DG2 (encoded biometric image of the face) are \cite{Anonymous:2006vu}. As of 2009 the presence of DG3-DG14 (including fingerprint scans, and iris images and additional personal details such as telephone number, proof of citizenship and custody information) have become a mandatory for EU countries \cite{Anonymous:2011vj}. However the presence of these data groups does not enforce that they are completed.
 
-More interestingly for a cryptologist additional files containing digital signatures of the data groups is mandatory. A file containing the trusted point required for authenticating access to sensitive biometric data may also be supplied. Additionally the ePassport also holds a Security Object (DSO) that will be discussed in Section~\ref{sec:PA}.
+More interestingly for a cryptanalyst is that  additional files containing digital signatures of the data groups is now mandatory. A file containing the trusted point required for authenticating access to sensitive biometric data may also be supplied. Additionally the ePassport also holds a Security Object (DSO) that will be discussed in Section~\ref{sec:PA}.
 
 \begin{figure}
 \centering
@@ -129,11 +125,9 @@ More interestingly for a cryptologist additional files containing digital signat
 \end{figure}
 
 \section{Implementation}
-{\color{red}{This section could cover practical issues related to the implementation of an algorithm, protocol, or system, and may link to demonstration software that has been developed as part of the project.}}
+The interactions of with ePassport must be secure in two directions. The reader of the data held within the ePassport wishes to verify the integrity of the data, effectively to be sure that the holder of the passport is who they say they are. The Passive Authentication (PA) protocol in combination with Active Authentication (AA) protocol, or the proposed Chip Authentication (PA) protocol ensures this integrity.
 
-The security of the ePassport must be secure in both directions. The reader of the data held within the ePassport wishes to verify the integrity of the data, effectively to be sure that the holder of the passport is who they say they are. The Passive Authentication (PA) protocol in combination with Active Authentication (AA) protocol, or the proposed Chip Authentication (PA) protocol ensures this integrity.
-
-On the other hand, the holder of the ePassport does not wish to provide its sensitive data to an unauthorised source, currently there is no mandatory protection of this data, however the Basic Access Control (BAC) protocol has been widely adopted. BAC as we shall shortly discuss is not as secure as it was initially believed and is thus not recommended for protecting sensitive biometric data. A new protocol, EAC, has been proposed for this purpose. As we shall discuss this protocol in its newest state overcomes many of the problems with the BAC and it is likely to be adopted by the next generation of ePassports.
+On the other hand, the holder of the ePassport does not wish to provide its sensitive data to an unauthorised party, currently there is no mandatory protection of this data, however the Basic Access Control (BAC) protocol has been widely adopted. BAC, as we shall shortly discuss, is not as secure as it was initially believed and is thus not recommended for protecting sensitive biometric data. A new protocol, EAC, has been proposed for this purpose. As we shall discuss this protocol in its newest state overcomes many of the problems with the BAC and it is likely to be adopted by the next generation of ePassports.
 
 We will now discuss these technologies in depth. We will consider how the protocols work in conjunction with public-key cryptography and digital signatures to maintain a secure system maintaining data integrity and authenticity of the data.  
 
@@ -179,7 +173,7 @@ The authentication works again by capitalizing on public-key cryptography. Here 
 
 The protocol is a simple challenge-response protocol (illustrated in Figure~\ref{fig:AA}). It begins by the Inspection System generating a nonce (a new random number) and challenging the chip to sign it with its AAPrK. The chip signs the nonce with the AAPrK and passes the resulting encrypted nonce to the IS. The IS in turn uses the verified AAPuK read from the chip to decrypt the nonce and checks that it is identical to the nonce initially passed. If the chip was a forgery, it would not contain the matching AAPrK to the AAPuK stored in DG15, and as such it would not be able to encode the nonce in a way could be decoded by AAPuK. 
 
-When implemented properly this method of authenticity verification is believed to be very effective. However, various hacks have been discovered to both disable the Active Authentication checking (which has been fixed in recent Inspection Systems software), and also recovering the AAPrK through power analysis when a challenge is made \cite{Witteman:2005ta}. The latter hack has more drastic consequences, as if a chip can be made with an identical copy of all the chip data, and the AAPrK was to be saved to the secure memory area of the chip, they the passport chip would appear indistinguishable from the authentic chip.
+When implemented properly this method of authenticity verification is believed to be very effective. However, various vulnerabilities have been discovered to both disable the Active Authentication checking (which has been fixed in recent Inspection Systems software), and also recovering the AAPrK through power analysis when a challenge is made \cite{Witteman:2005ta}. The latter hack has more drastic consequences, as if a chip can be made with an identical copy of all the chip data, and the AAPrK was to be saved to the secure memory area of the chip, they the passport chip would appear indistinguishable from the authentic chip.
 
 \section{Basic Access Control (BAC)}
 \label{sec:BAC}
@@ -189,7 +183,7 @@ The aim of BAC is to agree on a key with which messages between the Inspection S
 
 The implementation of BAC relies on strong conventional symmetric encryption techniques such as 3DES (Section~\ref{sec:3DES}) to secure a conversation between the Inspection System and the chip, where messages can be trusted they are from a secure source. The chip holds two keys, denoted KE and KM. These keys can be derived from the Machine Readable Zone (MRZ) of the passport, which is a long string located on the page of the passport usually located on the same page as the biometric facial image. The fact that this string is required is central to the security of BAC, and as we shall discuss momentarily, is one of its major flaws. The Inspection System is expected to read the string in the MRZ (often using OCR) and derive the keys KE and KM in order to initiate the conversation with the chip.
 
-Once the keys KE and KM have been derived, the IS sends a challenge to the chip of the ePassport. In response the chip generates a 64 bit nonce, NC, which is passed back to the IS. This nonce ensures that the conversation cannot be replayed to the chip, as each conversation is unique. The IS then generates its own random nonce NIS and 64 bit key KIS. NC, NIS and KIS are then encrypted by the 3DES (for the UK, other countries agree on their own encryption algorithms) algorithm using the KE key derived from the MRZ, this message is denoted EN. Additionally a checksum (SHA-1 hash - known as MAC) of the encrypted message is encrypted by KM and sent as a message denoted MN. The MN acts similarly to the digital signature used in Passive Authentication, confirming that EN has not been modified. However, whereas a digital signature is signed with a private key, MN is signed with a shared key KM. The process of encoding messages and MAC's is illustrated in Figure~\ref{fig:MACencoding}.
+Once the keys KE and KM have been derived, the IS sends a challenge to the chip of the ePassport. In response the chip generates a 64-bit nonce, NC, which is passed back to the IS. This nonce ensures that the conversation cannot be replayed to the chip, as each conversation is unique. The IS then generates its own random nonce NIS and 64-bit key KIS. NC, NIS and KIS are then encrypted by the 3DES (for the UK, other countries agree on their own encryption algorithms) algorithm using the KE key derived from the MRZ, this message is denoted EN. Additionally a checksum (SHA-1 hash - known as MAC) of the encrypted message is encrypted by KM and sent as a message denoted MN. The MN acts similarly to the digital signature used in Passive Authentication, confirming that EN has not been modified. However, whereas a digital signature is signed with a private key, MN is signed with a shared key KM. The process of encoding messages and MAC's is illustrated in Figure~\ref{fig:MACencoding}.
 
 \begin{figure}
 \centering
@@ -232,11 +226,11 @@ As \cite{Hoepman:2006tg} noted, ECRYPT EU Network of Excellence on cryptology re
     \label{tab:MRZ-entropy}
 \end{table}
 
-Another concern raised by Chothia et al.\ \cite{Chothia:2010wf} arises from the incomplete implementation specifications. Each country implements their own version of the BAC protocol, and as expected this results in inconsistencies. Chothia developed a hack (code can be found at \cite{ChothiaPassportAtt:wz}) that capitalizes on such an inconsistency to allow any e-Passport to be tracked without the holder's knowledge. The hack uses the fact that some BAC implementations return different errors when the authentication fails due to mismatching nonce's, to authentication failure due to mismatching MAC.
+Another concern raised by Chothia et al.\ \cite{Chothia:2010wf} arises from the incomplete implementation specifications. Each country implements their own version of the BAC protocol, and as expected this results in inconsistencies. Chothia developed a hack (code can be found at \cite{ChothiaPassportAtt:wz}) that capitalizes on such an inconsistency to allow any e-Passport to be tracked without the holder's knowledge. The exploit uses the fact that some BAC implementations return a different error when authentication fails due to a mismatching nonce compared to when a failure is due to mismatching MAC.
 
 A valid conversation been an inspection system and an ePassport can be recorded (since RFID is contactless, these communications can be recorded from a few meters away). If this message is replayed to the same ePassport it will validate that the message is indeed correct, except that it isn't using the random nonce it told the inspection system to encode. As such it will reject the authentication based on mismatching nonce's. If the same message was replayed to a different ePassport, the MAC would not match and authentication would be rejected on the bases of a mismatching MAC.
 
-Armed with this knowledge, an attacker than then set up systems wherever he wishes which probe all passports with recorded messages, and logging whether authorization was rejected on the basis of incorrect nonce or MAC. The attacker will then know whether an individual has passed their probe at any point in time. This type of attack is known as a traceability attack. Although many ePassport holders do not keep their passport on their persons at all times, with the possible introduction of identity cards using similar technology this type of attack is a cause of concern.
+Armed with this knowledge an attacker can then set up systems, wherever he wishes, which probe all passports with recorded messages and log whether authorization was rejected on the basis of incorrect nonce or MAC. The attacker will then know whether an individual has passed their probe at any point in time. This type of attack is known as a traceability attack. Although many ePassport holders do not keep their passport on their persons at all times, with the possible introduction of identity cards using similar technology this type of attack is a cause of concern.
 
 \section{Extended Access Control (EAC)}
 \label{sec:EAC}
@@ -301,13 +295,8 @@ The chip first generates a random nonce. This is encrypted by a key composed of 
 
 The Federal Office for Information Security (BSI) introduced this protocol in 2008 along with updates to EAC protocols CA and TA \cite{Nithyanand:2009ud}. This protocol along with EAC overcomes many of the most serious concerns experts have with the security of our national passports. By dynamically creating shared passwords, the BSI would be taking a leaf from the new age financial security whereby new passwords are given for each individual session which need to be physically entered before any communication can begin.
 
-\section{Data and evidence}
-{\color{red}{A strong report will make good use of data that are either collected as part of the project (please stay within the legal framework - so don't collect  data  on  system  vulnerabilities!),  or  publicly  available,  as  well  as  other published material.
-Blah}}
 
 \section{Discussion}
-{\color{red}{This section will set the findings of the report within a wider context, and may for example make a case for including this material as part of the lectures in the module next year.}}
-
 We have surveyed the current authentication, verification and encryption methods and protocols used in past and current generation of ePassports. 
 A theme frequently seen in security applications has arisen of apparently solid protocols being developed and concerned and interested experimentalists and enthusiasts somewhat successfully proving how weak they are.
 
