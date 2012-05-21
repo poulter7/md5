@@ -52,14 +52,14 @@
 \section{Hashing a message}
 Hashing functions are able to take a variable length message and from it create a fixed length output. A hashing function will always hash the same input to the same output. The special type of hashing functions, discussed here are cryptographic hashing functions, these have additional properties which mean they are used in a range of security applications.
 
-A hashing function is a mapping for a binary string, $H$: $\{0,1\}^* \rightarrow \{0,1\}^n$, to create a fixed length digest. The number of distinct possible outputs of a hashing function of fixed length $L$ is $2^L$ theoretical digests. There are clearly vastly more valid inputs as the input may be of an arbitrary length, therefore there are necessarily collisions, due to the pigeon-hole effect. It is important however that there is no determinable connection between the message, $m$, and the digest, $H(m)$. $H$ should generate sufficiently random digests such that it fulfills three criteria:
+A hashing function is a mapping for a binary string, $H$: $\{0,1\}^* \rightarrow \{0,1\}^n$, to create a fixed length digest. The number of distinct possible outputs of a hashing function of fixed length $L$ is $2^L$ theoretical digests. There are clearly vastly more valid inputs as the input may be of an arbitrary length, therefore there are necessarily collisions, due to the pigeon-hole effect. It is important however that there is no determinable connection between the message, $m$, and the digest, $H(m)$. $H$ should generate sufficiently random digests such that it fulfils three criteria:
 \begin{itemize}
-  \item it should be computationally infeasible to find some $m_1$ and $m_2$ where $m_1 \neq m_2$ and $H(m_1) = H(m_2)$, this is the \textbf{collision-free property}. This property is desirable because of hashes being used to distinguish input data. Collisions reduce the condifence one can have in a function for its ability to distinguish distinct inputs.
+  \item it should be computationally infeasible to find some $m_1$ and $m_2$ where $m_1 \neq m_2$ and $H(m_1) = H(m_2)$, this is the \textbf{collision-free property}. This property is desirable because of hashes being used to distinguish input data. Collisions reduce the confidence one can have in a function for its ability to distinguish distinct inputs.
   \item given a digest $h$, it should be computationally infeasible to find any $m$ where $h = H(m)$. This is \textbf{first pre-image resistance}, this ensures it is difficult to retrieve a hashed message.
   \item  an input $m_1$, and the digest $H(m_1)$ it should be computationally infeasible to find a second message $m_2$ where $m_1 \neq m_2$ and $H(m_1) = H(m_2)$, this is \textbf{second pre-image resistance}. When a message and hash are found, it should be infeasible to find more messages which hash to the same value.
 \end{itemize}
 
-A tasking being computationally infeasibile refers to an adversary being unable to perform the action in a reasonable amount of time with reasonable resources.
+A tasking being computationally infeasible refers to an adversary being unable to perform the action in a reasonable amount of time with reasonable resources.
 
 \label{sec:propeties_of_a_hash}
 
@@ -71,7 +71,7 @@ There are many cryptographic hash functions, many vary in success at fulfilling 
 
 \section{The Merkle-Damg\r{a}rd Construction}
 Various constructs can build a hashing function, however the most popular over the last two decades, which is the construction underlying the most dominant hashes in use today, is the Merkle-Damg\r{a}rd (MD) construction \cite{Merkle1979}.
-The aim is to build a hashing function $H$ which takes an abitrary length message to create a digest, $\{0,1\}^* \xrightarrow{H} \{0,1\}^n$ in the same fashion as a random oracle would. In practice creating a straight-forward hashing or block cipher to take arbitrary input is impractical, most modern hashing functions, take some compression-function and repeatedly apply it to successive blocks of the message.
+The aim is to build a hashing function $H$ which takes an arbitrary length message to create a digest, $\{0,1\}^* \xrightarrow{H} \{0,1\}^n$ in the same fashion as a random oracle would. In practice creating a straight-forward hashing or block cipher to take arbitrary input is impractical, most modern hashing functions, take some compression-function and repeatedly apply it to successive blocks of the message.
 
 If a compression function $f$ is suitably provably random then it is possible to create a equally provably random $H$ by using the MD construction. The function takes a message an splits it into blocks of equal length therefore the construct only works on messages which have length, $L$ where $$L \equiv 0 \text{ (mod } n).$$
 
@@ -153,8 +153,6 @@ As cryptanalysis has progressed the number of attacks on the MD construction its
 The first weakness of the simple MD construction is that once a single collision has been found it is trivial to find more\cite{Sasaki2006}. 
 
 Let $H: \{0,1\}^* \rightarrow \{0,1\}^n$ be a hashing function and two distinct messages $m_1$ and $m_2$ are a collision pair, that is $H(m_1) = H(m_2)$, under the simple MD construction it is trivial to generate more collisions by appending the collision-causing message with a common message $x$ producing $H(m_1||x)$, $H(m_2||x)$.  Where $||$ is the concatenation operator.
-{\color{red} another attack}
-
 
 
 \label{sec:length}
@@ -170,17 +168,17 @@ A mandatory ``1'' bit is added to the end of the bit-string
 Padding ``0'' bits are added to the message to make the length, l, $$l \equiv 448 \text{ (mod } 512).$$
 
 \paragraph{Length appending}
-The message will be processed in blocks of 128-bits, to create a 128-bit ouput so the message length must be a multiple of 128-bit also. Also it is desirable to include the length-strengthening discussed in \ref{sec:length}. This has the ability to prevent some attacks, which the MD construction is weak against. So the bit-string is appended with the 64-bit representation of the number $b$. Now, $$l \equiv 0 \text{ (mod } 512).$$
+The message will be processed in blocks of 128-bits, to create a 128-bit output so the message length must be a multiple of 128-bit also. Also it is desirable to include the length-strengthening discussed in \ref{sec:length}. This has the ability to prevent some attacks, which the MD construction is weak against. So the bit-string is appended with the 64-bit representation of the number $b$. Now, $$l \equiv 0 \text{ (mod } 512).$$
 
-\paragraph{IV intialisation}
-Once the message has been prepared the MD construction is initialised, the intial vector of the construct ($IV_0$) is
+\paragraph{IV initialisation}
+Once the message has been prepared the MD construction is initialised, the initial vector of the construct ($IV_0$) is
 
 \begin{tabular}{ l l l l}
 	$A_0$ = \texttt{0x67452301}& $B_0$ = \texttt{0xefcdab89}& $C_0$ = \texttt{0x98badcfe}& $D_0$ = \texttt{0x10325476}
 \end{tabular}
 
 \subsection{The MD5 Compression Function}
-Once the message has been prepared the MD5 compression function is ran over the padded message, 128-bits at a time. The compression function is illustrated in figure \ref{fig:md5comp} and is initliased to some given some IV, shown by $A, B, C, D$. $A$, from the IV is permuted by the function and the result is stored into the location of $B$. Firstly a non-linear combination of $B, C$ and $D$ is added, then the 32-bit block under consideration in the operation is added. A constant, derived from the mathematical $\sin$ function is added. $A$ is then subject to a left-bit rotation, by a varying number of places and then the contents of $B$ is also added. 64 variants of this operation are performed, they are grouped into blocks of 16, producing 4 `rounds'. It is important to note that all addition is modulo $2^{32}$, 32-bit addition.
+Once the message has been prepared the MD5 compression function is ran over the padded message, 128-bits at a time. The compression function is illustrated in figure \ref{fig:md5comp} and is initialised to some given some IV, shown by $A, B, C, D$. $A$, from the IV is permuted by the function and the result is stored into the location of $B$. Firstly a non-linear combination of $B, C$ and $D$ is added, then the 32-bit block under consideration in the operation is added. A constant, derived from the mathematical $\sin$ function is added. $A$ is then subject to a left-bit rotation, by a varying number of places and then the contents of $B$ is also added. 64 variants of this operation are performed, they are grouped into blocks of 16, producing 4 `rounds'. It is important to note that all addition is modulo $2^{32}$, 32-bit addition.
 The resulting hash is the concatenation of the IV components, $A || B || C || D$.
 \begin{figure}
     \centering
@@ -222,7 +220,7 @@ There have been many distributed projects which have tasked themselves with find
 %The  \cite{Klima2006} presented tunnelling 
 %}
 
-The same group, 6 years later presented the first public MD5 collision using a single block \cite{Xie2013}, this collision is shown in figure \ref{fig:colxie}. The implocation of being able to generate these collisions easily has already been exploited, most notoriously in the production of fake signed website certificates \cite{Stevens}, as this becomes more feasible and computational tractable the chance of generating even more `useful' collisions increases. A useful collision is not only a collision in the compression function, but a collision which can be used for some form of gain.
+The same group, 6 years later presented the first public MD5 collision using a single block \cite{Xie2013}, this collision is shown in figure \ref{fig:colxie}. The implication of being able to generate these collisions easily has already been exploited, most notoriously in the production of fake signed website certificates \cite{Stevens}, as this becomes more feasible and computational tractable the chance of generating even more `useful' collisions increases. A useful collision is not only a collision in the compression function, but a collision which can be used for some form of gain.
 \begin{figure}
 \begin{tabular}{|r|  l l l l|}
 $M_0$:& $X_0$ = \texttt{0x6165300E} & $X_4$ = \texttt{0x6503CF04} & $X_8$ = \texttt{0x2F94CC40} & $X_{12}$ = \texttt{0x6D658673} \\
@@ -266,11 +264,11 @@ For a hash $H$: $\{0,1\}^* \rightarrow \{0,1\}^n$ and a finite password set $P$;
 \paragraph{Hash chain tables}
 Instead a reduction function $R$ is produced to take a hash and produce a new message from it, where $h \in H$ and $p \in P$. $R$ produces the mapping $h \rightarrow p$, this allows for an alternating chain of \emph{message to hash to message\dots} to be produced.
 
-To generate a hash-chain table\cite{Hellman1980}, a random set of passwords from P is selected. Each of these is hashed, then the resulting hash is gien to the reduction function, this is then hashed, this process is repeated $k$ times, where $k$ is the chain length. Instead of storing the entire chain, simply the starting point and the last password are stored. 
+To generate a hash-chain table\cite{Hellman1980}, a random set of passwords from P is selected. Each of these is hashed, then the resulting hash is given to the reduction function, this is then hashed, this process is repeated $k$ times, where $k$ is the chain length. Instead of storing the entire chain, simply the starting point and the last password are stored. 
 \begin{center}
     password $\xrightarrow{H}$ \textsc{2867c6a4} $\xrightarrow{R}$ tadcaacc $\cdots$ nomzyaw$\xrightarrow{H}$ 3b5440e1 $\xrightarrow{R}$ bffbbecf
 \end{center}
-Here only `password' and `bffbbecf' need to be stored to retrace every hash, and thefore generating password, seen while creating the table.
+Here only `password' and `bffbbecf' need to be stored to retrace every hash, and therefore generating password, seen while creating the table.
 
 To use the table to attack a hash $h$, firstly the hash is passed through the reduction function, to produce a candidate password $p$. If this $p$ appears in the set of endpoints of the table then the corresponding starting password is selected and the series of hash-reductions is applied until the original $h$ is seen, the $p$ which generated $h$ is the plaintext preceding $h$ in the chain. 
 It isn't guaranteed that this search will be successful as multiple hashes are likely to reduce to the same $p$, this is illustrated in figure \ref{fig:table}. If unsuccessful further hash-reducing is performed on $h$ until a chain of length $k$ is reached. If the hash is not discovered before reaching $k$, then the hash was never seen during the creation of the table and the search has failed.
@@ -307,7 +305,7 @@ It isn't guaranteed that this search will be successful as multiple hashes are l
 
 \end{tikzpicture}
 \end{center}
-\caption{Visualisation of a hash-chain table, this demonstrates how finding the endpoint $e$ does not neccessarily reveal the password as multiple hashes are likely to reduce to the same password in the password space.}
+\caption{Visualisation of a hash-chain table, this demonstrates how finding the endpoint $e$ does not necessarily reveal the password as multiple hashes are likely to reduce to the same password in the password space.}
 \label{fig:table}
 \end{figure}
 
@@ -359,7 +357,7 @@ The largest shortcoming of simple hash-chain tables is that the number of collis
 A rainbow table has $k$ different reduction functions $R_1 \rightarrow R_k$ and these are applied sequentially, alternating between hash and reduction application as in the hash-chain approach. This greatly reduces the damage caused by a collision. Collisions will still occur as shown in figure \ref{fig:rain}, but in the next step the application of a different reduction function will diverge the two chains again. It is possible to still have a collision which wastes the chain: if both chains merge on the same step, this will tie the two chains in to exploring the same state-space. This is much rarer than the collision case in the simple hash-chain table.
 
 Using a rainbow table is still quite simple, given a hash, $h$ to attack, the last reduction function, $R_k$ is applied and the table is searched for a chain which has a matching endpoint. This is an attempt at guessing that the hash was the last hash the table saw.
-If none is found then the preceeding reduction $R_{k-1}$ is applied, followed by the hash and $R_k$. This is a guess that the $h$ was the penultimate hash seen in each table chain. This continues until a hit is found in the set of endpoints. Once it is the starting point is selected and the chain is replayed until $h$ is found, the preceeding password is the password which hashed to $h$, as with the hash-chain table.
+If none is found then the preceding reduction $R_{k-1}$ is applied, followed by the hash and $R_k$. This is a guess that the $h$ was the penultimate hash seen in each table chain. This continues until a hit is found in the set of endpoints. Once it is the starting point is selected and the chain is replayed until $h$ is found, the preceding password is the password which hashed to $h$, as with the hash-chain table.
 
 
 The original rainbow table paper demonstration, by Oechslin, constructed a rainbow table and accompanying program to crack Windows passwords. The program and wider principle behind rainbow tables has been subsequently used to demonstrate the tractability of pre-image attacks given that distributed resources are now available. Projects including \texttt{freerainbowtables.com} use many clients to distribute the work of generating hash chains. These projects have created a wealth of tables which these writers believe, though they do not break the hash's cryptographic one-way nature, do undermine the security of existing hashes and should raise questions about the continued use of algorithms such as MD5 and SHA-1.
@@ -416,10 +414,10 @@ Using FPGAs it is possible to construct hardware circuit which are able to unrol
 
 
 \section{Side Channel Attacks}
-A side channel attack is an attack on the physical implementation of the cryptosystem. The main attacks are based on the fact there are effecient ways to do certain mathmatical functions on a processor based on the values being processed, this is usually branching dependent on whether particular bits are 0 or 1. This approach has been widely applied on 3-DES schemes and only tried occasionally, with limited success to traditional hashes, such as MD5.
+A side channel attack is an attack on the physical implementation of the cryptosystem. The main attacks are based on the fact there are efficient ways to do certain mathematical functions on a processor based on the values being processed, this is usually branching dependent on whether particular bits are 0 or 1. This approach has been widely applied on 3-DES schemes and only tried occasionally, with limited success to traditional hashes, such as MD5.
 
 \subsection{Power Attacks}
-There are two types of Power Attacks. Using Simple Power Analysis(SPA) is simply watching the trace of the power flowing through the processer while it is performing the functions this shows the load on the processer and from that work out what action is being done. Peter Kocher outlined using DES in \cite{kocherPower} showing that you can see the distinct rounds in the DES structure. 
+There are two types of Power Attacks. Using Simple Power Analysis(SPA) is simply watching the trace of the power flowing through the processor while it is performing the functions this shows the load on the processor and from that work out what action is being done. Peter Kocher outlined using DES in \cite{kocherPower} showing that you can see the distinct rounds in the DES structure. 
 
 \begin{figure}
     \includegraphics[width=\textwidth]{SPAtrace.png}
@@ -428,15 +426,15 @@ There are two types of Power Attacks. Using Simple Power Analysis(SPA) is simply
 \end{figure}
 The other type is a Differential Power Analysis where many different checks are used and then a difference is applied to only show the `significant' changes. Looking at DES in a round of the encryption the 8 S-Boxes each take 6 subkey bits and 6 bits of the R side and produce 4 bits of output as described in \cite{otherPaper}. The selection function $D(C,b,K_s)$ is defined as the value of the bit $0 \le b < 32$ of the DES L side before working out the 16th round for the cipher text $C$, where the 6 key bits entering the S box corresponding to the bit $b$ are $0 \le K_s < 2^6$. If we have the wrong key bits we will get the bit $b$ right half of the time due to chance. 
 
-To use the DPA attack first takes $m$ samples of cipher text and power traces $T_{1..m}[1..k]$ containing $k$ samples each and evaluates $D$ for them and seperates them into two groups $g_0$ and $g_1$ where the evaluations for $b$ are 0 and 1 respectivly. Then $\Delta_D$ is worked out for the means of the traces from $g_0$ and $g_1$. Then $\Delta_D[j]$ is the average over $C_{1..m}$ of the change due to the value of the selection function $D$ on the power consumption at point $j$. 
+To use the DPA attack first takes $m$ samples of cipher text and power traces $T_{1..m}[1..k]$ containing $k$ samples each and evaluates $D$ for them and seperates them into two groups $g_0$ and $g_1$ where the evaluations for $b$ are 0 and 1 respectively. Then $\Delta_D$ is worked out for the means of the traces from $g_0$ and $g_1$. Then $\Delta_D[j]$ is the average over $C_{1..m}$ of the change due to the value of the selection function $D$ on the power consumption at point $j$. 
 \begin{align}
     \Delta_D[j] &= \frac{\sum_{i=1}^mD(C_i,b,K_s)T_i[j]}{\sum_{i=1}^mD(C_i,b,K_s)} -  \frac{\sum_{i=1}^m(1-D(C_i,b,K_s))T_i[j]}{\sum_{i=1}^m(1-D(C_i,b,K_s))}\\
     &\approx 2( \frac{\sum_{i=1}^mD(C_i,b,K_s)T_i[j]}{\sum_{i=1}^mD(C_i,b,K_s)} - \frac{\sum_{i=1}^mT_i[j]}{m}) 
 \end{align}
 
-If $K_s$ is correct however, the calulation of $D$ will be correct for all the cipher text. As a result the $\Delta_D[j]$ will approach the effect of the target bit on the power consumption as $m \rightarrow \infty$.
+If $K_s$ is correct however, the calculation of $D$ will be correct for all the cipher text. As a result the $\Delta_D[j]$ will approach the effect of the target bit on the power consumption as $m \rightarrow \infty$.
 
-The correct value of $K_s$ can be identified from the spikes in the differential traces. Four values of $b$ correspond to each S Box, providing validation of key block guesses. If you find all the eight $K_s$ gives you the entire 48-bit round subkey. The remaining 8 key bits can be found either by exhaustive search or the attack could be focused on another round of the DES sequence. Triple DES keys can be found by analyzing the outer DES operation, finding the key to decrypt the ciphertext and then attacking the next DES key. Shown in figure~\ref{fig:desResult} are 4 traces of a reference trace followed by correct $K_s$ and two incorrect one.
+The correct value of $K_s$ can be identified from the spikes in the differential traces. Four values of $b$ correspond to each S Box, providing validation of key block guesses. If you find all the eight $K_s$ gives you the entire 48-bit round subkey. The remaining 8 key bits can be found either by exhaustive search or the attack could be focused on another round of the DES sequence. Triple DES keys can be found by analysing the outer DES operation, finding the key to decrypt the ciphertext and then attacking the next DES key. Shown in figure~\ref{fig:desResult} are 4 traces of a reference trace followed by correct $K_s$ and two incorrect one.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{DPATraces.png}
@@ -448,13 +446,13 @@ The correct value of $K_s$ can be identified from the spikes in the differential
 There is the belief that using there is a possibility to use DPA on a HMAC-MD5 based on a smartcard, due to the ease of control timing cycles and power input. This is outlined in \cite{JiriKur}. However this turns out to be false and is blamed on the equipment used as this was set up with standard equipment not specialist equipment, it is suggested specialist hardware could improve the results. This would suggest, at the current time, that this type of attack best suited for to attacks on DES or RSA as described above.
 
 \subsection{Timing Attacks}
-There are quite a few different types of timing attacks which essentially take advantage of algorithms taking shortcuts to save computing power based on what it is processing. One of which is for computing $R = y^x \mod n$, where $x$ is $w$ bits long, which is used in RSA, is shown in~\ref{alg:expSquare} where $X_k$ means the $k^{th}$ bit of $x$ as you can see if the bit of the exponent is 1 we have to compute an extra muliplication step which gives us the possibility of watching out for how long a pass through the algorithm takes which would give us if $X_k$ is 0 or 1, which means we can rebuild the exponent. This is critical in RSA as $y$ is the cipher text which can be easvedropped upon and $n$ is public. This is outlined in \cite{crosbyTiming} as a possibility to crack RSA over the internet based on large number of observations to counteract the noise of the timing data.
+There are quite a few different types of timing attacks which essentially take advantage of algorithms taking shortcuts to save computing power based on what it is processing. One of which is for computing $R = y^x \mod n$, where $x$ is $w$ bits long, which is used in RSA, is shown in~\ref{alg:expSquare} where $X_k$ means the $k^{th}$ bit of $x$ as you can see if the bit of the exponent is 1 we have to compute an extra multiplication step which gives us the possibility of watching out for how long a pass through the algorithm takes which would give us if $X_k$ is 0 or 1, which means we can rebuild the exponent. This is critical in RSA as $y$ is the cipher text which can be eavesdropped upon and $n$ is public. This is outlined in \cite{crosbyTiming} as a possibility to crack RSA over the internet based on large number of observations to counteract the noise of the timing data.
 
-Another type of timing attack is due to how checks of equality of iterables are usually lazily evaluated, as in they cut out when they find they are inequal as there is no gain from finishing the comparison due to no additional information gained. This has lead to the ability to see \emph{how many bits we got right} \cite{lessonInTiming} this shows how problems can occur essentially outside of how secure any crypto algorithm is if there is side channel leak of information due to implementation either in the hardware running it or the exact way programmatically the algorithm is implemented.
+Another type of timing attack is due to how checks of equality of iterables are usually lazily evaluated, as in they cut out when they find they are not equal as there is no gain from finishing the comparison due to no additional information gained. This has lead to the ability to see \emph{how many bits we got right} \cite{lessonInTiming} this shows how problems can occur essentially outside of how secure any crypto algorithm is if there is side channel leak of information due to implementation either in the hardware running it or the exact way programmatically the algorithm is implemented.
 
 
 \begin{algorithm}
-    \caption{Exponentiation By Squaring based off of the explination in \cite{kocherTiming}}
+    \caption{Exponentiation By Squaring based off of the explanation in \cite{kocherTiming}}
     \label{alg:expSquare}
 \begin{algorithmic}
     \State $S_0 \gets 1$
