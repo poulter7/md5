@@ -225,14 +225,16 @@ $M_0$:& $X_0$ = \texttt{0x6165300E} & $X_4$ = \texttt{0x6503CF04} & $X_8$ = \tex
 	& $X_2$ = \texttt{0xF7C60BD0} & $X_6$ = \texttt{0xFB0FC034} & $X_{10}$ = \texttt{0x5C15F4A3} & $X_{14}$ = \texttt{0x8FD75920} \\
 	& $X_3$ = \texttt{0x34FEBD0B} & $X_7$ = \texttt{0x874C9C65} & $X_{11}$ = \texttt{0x490786BB} & $X_{15}$ = \texttt{0xEFD19d5A} \\
 $M_1$:& $X_0$ = \texttt{0x6165300E} & $X_4$ = \texttt{0x6503CF04} & $X_8$ = \texttt{0x2F94CC40} & $X_{12}$ = \texttt{0x6D658673} \\
-	& $X_1$ = \texttt{0x87A79A55} & $X_5$ = \texttt{0x854F709E} & $X_9$ = \texttt{0x15A12DEB} & $X_{13}$ = \texttt{0xA4341F7D} \\
-	& $X_2$ = \texttt{0xF7C60BD0} & $X_6$ = \texttt{0xFB0FC034} & $X_{10}$ = \texttt{0x5C15F4A3} & $X_{14}$ = \texttt{0x8FD75920} \\
+& $X_1$ = \texttt{0x87A79A55} & $X_5$ = \texttt{0x854F7{\underline 4}9E} & $X_9$ = \texttt{0x15A12DEB} & $X_{13}$ = \texttt{0xA4341F7D} \\
+    & $X_2$ = \texttt{0xF7C60BD0} & $X_6$ = \texttt{0xFB0FC034} & $X_{10}$ = \texttt{0x{\underline D}C15F4A3} & $X_{14}$ = \texttt{0x8FD75920} \\
 	& $X_3$ = \texttt{0x34FEBD0B} & $X_7$ = \texttt{0x874C9C65} & $X_{11}$ = \texttt{0x490786BB} & $X_{15}$ = \texttt{0xEFD19d5A} \\
     MD5: & \multicolumn{4}{l|}{\texttt{0xF999C8CA 0xF7939AB6 0x84F3C481 0x1457CB23}}
 %0x6165300e,0x87a79a55,0xf7c60bd0,0x34febd0b,0x6503cf04,0x854f749e,0xfb0fc034,0x874c9c65, 0x2f94cc40,0x15a12deb,0xdc15f4a3,0x490786bb,0x6d658673,0xa4341f7d,0x8fd75920,0xefd18d5a
 
 \end{tabular}
-    \caption{The single-block collision demonstrated by Xie\cite{Xie2013}.}
+\caption{The single-block collision demonstrated by Xie\cite{Xie2013}. Modified bits are underlined, this entire collision actually only differs by two bits.\\$0 \rightarrow 4$: \texttt{0000} $\rightarrow$ \texttt{0100} and 
+$5 \rightarrow D$: \texttt{1101} $\rightarrow$ \texttt{0101}.
+}
 \end{figure}
 
 Implications of quickly being able to identify MD5 collisions.
