@@ -413,14 +413,14 @@ Using FPGAs it is possible to construct hardware circuit which are able to unrol
 A side channel attack is an attack on the physical implementation of the cryptosystem the main attacks are based on the fact there is 'effecient' ways to do certain mathmatical functions on a processor based on what they values they are processing this is usually branching dependent on wether the bit 0 or 1. 
 
 \subsection{Power Attacks}
-There are two types of Power Attacks using Simple Power Analysis(SPA) is just watching the trace of the power flowing through the processer while it is performing the functions this shows the load on the processer and from that work out what action is being done. Peter Kocher outlined using DES in ?? showing that you can see the distinct rounds in the DES structure. 
+There are two types of Power Attacks using Simple Power Analysis(SPA) is just watching the trace of the power flowing through the processer while it is performing the functions this shows the load on the processer and from that work out what action is being done. Peter Kocher outlined using DES in \cite{kocherPower} showing that you can see the distinct rounds in the DES structure. 
 
 \begin{figure}
     \includegraphics[width=\textwidth]{SPAtrace.png}
     \caption{Trace showing a SPA of an entire DES operation.}
     \label{fig:desRound}
 \end{figure}
-The other type is a Differential Power Analysis where many different checks are used and then a difference is applied to only show the 'significant' changes. Looking at DES in a round of the encryption the 8 S-Boxes each take 6 subkey bits and 6 bits of the R side and produce 4 bits of output as described in the {\color{red} OTHER PAPER}. The selection function $D(C,b,K_s)$ is defined as the value of the bit $0 \le b < 32$ of the DES L side before working out the 16th round for the cipher text $C$, where the 6 key bits entering the S box corresponding to the bit $b$ are $0 \le K_s < 2^6$. If we have the wrong key bits we will get the bit $b$ right half of the time due to chance. 
+The other type is a Differential Power Analysis where many different checks are used and then a difference is applied to only show the 'significant' changes. Looking at DES in a round of the encryption the 8 S-Boxes each take 6 subkey bits and 6 bits of the R side and produce 4 bits of output as described in \cite{otherPaper}. The selection function $D(C,b,K_s)$ is defined as the value of the bit $0 \le b < 32$ of the DES L side before working out the 16th round for the cipher text $C$, where the 6 key bits entering the S box corresponding to the bit $b$ are $0 \le K_s < 2^6$. If we have the wrong key bits we will get the bit $b$ right half of the time due to chance. 
 
 To use the DPA attack first takes $m$ samples of cipher text and power traces $T_{1..m}[1..k]$ containing $k$ samples each and evaluates $D$ for them and seperates them into two groups $g_0$ and $g_1$ where the evaluations for $b$ are 0 and 1 respectivly. Then $\Delta_D$ is worked out for the means of the traces from $g_0$ and $g_1$. Then $\Delta_D[j]$ is the average over $C_{1..m}$ of the change due to the value of the selection function $D$ on the power consumption at point $j$. 
 \begin{align}
@@ -438,10 +438,36 @@ The correct value of $K_s$ can be identified from the spikes in the differential
     \label{fig:desResult}
 \end{figure}
 
-{\color{red}{TALK ABOUT DPA AGAINST HMAC-MD5}}
+
+There is the belief that using there is a possibility to use DPA on a HMAC-MD5 based on a smartcard, due to the ease of control timing cycles and power input. This is outlined in \cite{JiriKur}. However this turns out to be false due which was put down to the equipment used as this was set up with standard equipment not specialist equipment which could improve the results. Leaving this type of attack best suited for to attacks on DES or RSA as described above.
+
+\subsection{Timing Attacks}
+There are quite a few different types of timing attacks which essentially take advantage of algorithms taking shortcuts to save computing power based on what it is processing. One of which is for computing $R = y^x \mod n$, where $x$ is $w$ bits long, which is used in RSA, is shown in~\ref{alg:expSquare} where $X_k$ means the $k^{th}$ bit of $x$ as you can see if the bit of the exponent is 1 we have to compute an extra muliplication step which gives us the possibility of watching out for how long a pass through the algorithm takes which would give us if $X_k$ is 0 or 1, whichc means we can rebuild the exponent. This is critical in RSA as $y$ is the cipher text which can be easvedropped upon and $n$ is public. This is outlined in \cite{crosbyTiming} as a possibility to crack RSA over the internet based on large number of observations to counteract the noise of the timing data.
+
+Another type of timing attack is due to how checks of equality of iterables are usually lazily evaluated, as in they cut out when they find they are inequal as there is no gain from finishing the comparison due to no additional information gained. This has lead to the ability to see \emph{how many bits we got right} \cite{lessonInTiming} this shows how problems can occur essentially outside of how secure any crypto algorithm is if there is side channel leak of information due to implementation either in the hardware running it or the exact way programatticaly the algorithm is implemented.
+
+
+\begin{algorithm}
+    \caption{Exponentiation By Squaring based off of the explination in \cite{kocherTiming}}
+    \label{alg:expSquare}
+\begin{algorithmic}
+    \State $S_0 \gets 1$
+    \For{$k = 0 \to w - 1 $}
+    \If{$X_k = 1$}
+        \State $R_k \gets (s_k * y) \mod n$
+    \Else
+        \State $R_k \gets s_k$
+    \EndIf
+    \State $s_{k+1} \gets R_k^2 \mod n$
+    \EndFor\\
+    \Return $(R_{w-1})$
+\end{algorithmic}
+\end{algorithm}
 
 Resources:
+
 MIT Crypto lectures: http://cseweb.ucsd.edu/~mihir/papers/gb.pdf
+A Lesson In Timing Attacks: http://codahale.com/a-lesson-in-timing-attacks/
 Timing Attacks on Implementations of Diffie-Hellman, RSA, DSS, and Other Systems, P. Kocher.: http://www.cryptography.com/public/pdf/TimingAttacks.pdf
 Differential Power Analysis: http://www.cryptography.com/public/pdf/DPA.pdf
 Algorithms for differential power analysis of the cryptographic smart cards: https://is.muni.cz/th/98692/fi\_b/bc\_thesis\_Jiri\_Kur.pdf
