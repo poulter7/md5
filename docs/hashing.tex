@@ -158,10 +158,37 @@ The first weakness of the simple MD construction is that once a single collision
 
 Let $H: \{0,1\}^* \rightarrow \{0,1\}^n$ be a hashing function and two distinct messages $m_1$ and $m_2$ are a collision pair, that is $H(m_1) = H(m_2)$, under the simple MD construction it is trivial to generate more collisions by appending the collision-causing message with a common message $x$ producing $H(m_1||x)$, $H(m_2||x)$.  Where $||$ is the concatenation operator.
 
+{\color{red} to protect against this append the length}
+\label{sec:length}
+
 \section{The MD5 Hashing Function}
-\subsection{MD5 padding approach}
+The MD5 hashing algorithm\cite{Rivest} created in 1992 is an MD based hashing function. It has been widely used across the internet to store password hashes and is still dominant in providing file checksums, even though it has been shown to be collision weak MD5 is till commonly used in many situations. In the following section the algorithm itself is described as per the specification laid out in RFC 1321 \cite{Rivest}. A clear python implementation is included at the end of this report, the intention is to demonstrate a simple implementation which is useful for education rather than speed of execution.
+
+\subsection{MD5 message preparation}
+The MD5 digest algorithm processes a $b$-bit original message.
+\paragraph{Padding}
 \label{sec:md5pad}
+A mandatory ``1'' bit is added to the end of the bit-string 
+Padding ``0'' bits are added to the message to make the length, l, $$l \equiv 448 \text{ (mod } 512).$$
+
+\paragraph{Length appending}
+The message will br processed in blocks of 128-bits, to create a 128-bit ouput so the output congruent to 128-bit also. Also it is desirable to include the length-strengthening discussed in \ref{sec:length}. This has the ability to prevent some extention attacks, which the MD construction is weak against.
+
+\paragraph{IV intialisation}
+Once the message has been prepared the MD construction is prepared, the intial vector of the construct ($IV_0$) is
+
+\begin{tabular}{ l l l l}
+	$A_0$ = \texttt{0x67452301}& $B_0$ = \texttt{0xefcdab89}& $C_0$ = \texttt{0x98badcfe}& $D_0$ = \texttt{0x10325476}
+\end{tabular}
+
 \subsection{The MD5 Compression Function}
+Once the message has been prepared the MD5 compression function is ran over the prepared message, 128-bits at a time. The compression function is illustrated in figure \ref{fig:md5comp} and is initliased to some given some IV, shown by $A, B, C, D$. $A$, from the IV is permuted by the function and the result is stored into the location of $B$. Firstly a non-linear combination of $B, C$ and $D$ is added, then the 32-bit block under consideration in the operation is added. A constant, derived from the $\sin$ function is added. $A$ is then subject to a left-bit rotation, by a varying number of places and then the contents of $B$ is also added. 64 varients of this operation are performed, they are grouped into blocks of 16, producing 4 `rounds'. It is important to note that all addition is modulo $2^{32}$, 32-bit addition.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{md5.png}
+    \caption{The MD5 compression function.}
+    \label{fig:md5comp}
+\end{figure}
 
 \section{Attacking MD5}
 An attack on a hacking function attempts to circumvent the secure properties that a hashed message should have: the one-way property and the collision-free property, discussed in section \ref{sec:propeties_of_a_hash}.
@@ -381,7 +408,7 @@ Instead of storing just the hash, $h$, of the password $p$ a salted hash is stor
 The salt need not be kept a secret as it should not be of little help when attempting to calculate a pre-image. It is feasible to create a hash table which takes into account this salt. Using a single salt however is not a particularly safe approach as a single hash table could release the passwords to an entire database. Usually a salted hash and the salt are stored together, but importantly a salt will ideally be different for each password, possibly the timestamp of sign-up for example, ensuring the individual salts ensures that a fresh table would have to be created to crack each password and this is simple a brute force approach.
 
 Another alternative would be to make the construction of such a table inconceivable. This can be achieved by a process called key-strectching. This process repeatedly applies the hashing function (often in excess of 1000) times to the password, this has the effect of increasing the amount of time it takes to compute each hash in the chain. This has a drastic impact on the total time taken to produce the table.This approach is susceptable to a very specific type of attack, one using custom hardware. 
-Using FPGAs it is possible to construct hardware circuit which are able to unroll these repetition loops and therefore circumvent the added complexity added by the repetition stretching, this is a very specialised attack however and only viable when a lot of information is known about the encryption system.
+Using FPGAs it is possible to construct hardware circuit which are able to unroll these repetition loops and therefore circumvent the added complexity added by the repetition stretching, this is a very specialised attack however and only viable when a lot of information is known about the encryption system. The custom hardware necessary would be very expensive and approaches such as \textbf{scrypt}\cite{colin} which as part of their process deliberately inflate memory usage have been futher developed to make specialist hardware and parallelism a less viable option for producing large amounts of hashes.
 
 
 
