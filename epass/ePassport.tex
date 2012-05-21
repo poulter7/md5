@@ -7,6 +7,7 @@
 \usepackage{amssymb}
 \usepackage{epstopdf}
 \usepackage{color}
+\usepackage{amsmath}
 \usepackage{url}
 \usepackage{helvet} %To the untrained eye helvetica and arial are pretty much identical
 \renewcommand{\familydefault}{\sfdefault}
@@ -70,11 +71,38 @@ Public Key Infrastructures (PKI's) serve as a method of managing, distributing a
 
 \section{3DES}
 \label{sec:3DES}
-{\color{red}{How 3DES works and how is it so secure (not the main thing to worry about in the overall system)}}
-Triple Data Encryption Algorithm (3DES) is an implementation of the Data Encryption Standard (DES) cipher algorithm three times to each data block we'll go over the basics of DES to help explain 3DES
-\subsection{DES}
+Triple Data Encryption Algorithm (3DES) is an implementation of the Data Encryption Standard (DES) cipher algorithm three times to each data block we'll go over the basics of DES to help explain 3DES. DES is a block cipher based on a Feistel Network, which takes $d$ arbitary functions $f_1, \ldots , f_d: \{0,1\}^n \rightarrow \{0,1\}^n$, which transformers a bit string to another bitstring, which don't need to be inversable and builds a function $F:\{0,1\}^{2n} \rightarrow \{0,1\}^{2n}$ this function is usually based on a round key approach where a sub-key of a master key is used in progressive rounds to change the function $F$.
 
+As shown in figure~\ref{fig:feistNetwork} the network is built by taking $2n$-bits splitting it into 2 sides $R0$ and $L0$. Then $R0$ goes to $L1$ without any change, then the function $F(K_0)$ is applied to $R0$ then XORed with $L0$ which gives $R1$ this is then repeated down all rounds. Decryption is the same but the functions are applied in reverse order.
 
+\begin{figure}
+    \center
+    \includegraphics[width=3in]{feistNetwork.png}
+    \caption{Showing the feistel network set up and how encryption and decryption works}
+    \label{fig:feistNetwork}
+\end{figure}
+
+DES it's self is based on a 16 round Feistel Network where the functions are created from function $F$ which is shown in figure~\ref{fig:functionF} where a 32 bit half block, $R0$, is expanded using function $E$ and $XOR$ed with a 48 bit long subkey, which is created from a master key of 56 bits length. This 48 bit output is then chunked into 8 6 bit groups which are fed into S Boxes which are compression functions which takes 6 bits and outputs 4 bits. This then is $XOR$ed with $L0$ and becomes $R1$ this is then repeated for all 15 other rounds for DES.
+
+\begin{figure}
+    \center
+    \includegraphics[width=3in]{functionF.png}
+    \caption{Showing the function F for the original DES}
+    \label{fig:functionF}
+\end{figure}
+
+This however was deemed insecure due to the relativly small key space of $2^{56}$ which led to Triple DES to be put foward. There are 3 different keying options to get 3 Keys $K_1,K_2,K_3$
+\begin{itemize}
+    \item Keying Option 1: Is where all 3 keys are independant.
+    \item Keying Option 2: Is where $K_1$ and $K_2$ are independant, and $K_3 = K_1$.
+    \item Keying Option 3: Is where all keys are identical, $K_1 = K_2 = K_3$
+\end{itemize}
+
+Using these 3 keys the plain text,$PT$, is encrypted,$E$, using the first,$K_1$, then decrypted,$D$, using the second,$K_2$, then encrypted again using the 3rd,$K_3$, to gain the cipher text,$CT$. The process is reversed to decrypt the message. As long as Keying option 1 is used this increases the key space to $2^{168}$
+\begin{align}
+    CT &= E_{K3}(D_{K2}(E_{K1}(PT)))\\
+    PT &= D_{K3}(E_{K2}(D_{K1}(CT)))
+\end{align}
 \section{Structure of ePassport}
 \label{sec:LDS}
 One of the main purposes of an ePassport is providing proof of identity when entering a new country. In order to do this an agreed structure of information and protocols need to be internationally standardized and agreed on. ICAO has set the standardized Logical Data Structure (LDS) that is widely used by countries implementing ePassport technology (Figure~\ref{fig:LDS}).
