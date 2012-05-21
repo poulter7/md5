@@ -212,12 +212,13 @@ Although many collisions have now been found for the MD5 hash, the first publicl
 
 There have been many distributed project which have tasked themselves with finding MD5 collisions on the full algorithm and the first of this to report results was MD5CRK\cite{cryptoeprint:2004:199}. This project yielded two full colliding message pairs for the MD5 algorithm and also collisions for the MD4, RIPEMD and HAVAL-128 protocols. Each message presented for MD5 was made of two blocks, each first block was identical and has the effect of forcing the MD construction into using a fixed IV while processing the second block which can be given two distinct blocks and still produce the same hash. The MD5CRK algorithm spent the majority of its time finding a block which is able to generate an exploitable IV, after this is found it took very little time to produce a second block which is able to break collision-resistance.
 
-{\color{red}
-Tunneling
+%{\color{red}
+%Tunneling
 
-The  \cite{Klima2006} presented tunnelling 
-}
-The same group, 6 years later presented a single \cite{Xie2013}, presented the first public MD5 collision using a single block.
+%The  \cite{Klima2006} presented tunnelling 
+%}
+
+The same group, 6 years later presented the first public MD5 collision using a single block \cite{Xie2013}.
 \begin{figure}
 \begin{tabular}{|r|  l l l l|}
 $M_0$:& $X_0$ = \texttt{0x6165300E} & $X_4$ = \texttt{0x6503CF04} & $X_8$ = \texttt{0x2F94CC40} & $X_{12}$ = \texttt{0x6D658673} \\
@@ -237,14 +238,16 @@ $5 \rightarrow D$: \texttt{1101} $\rightarrow$ \texttt{0101}.
 }
 \end{figure}
 
-Implications of quickly being able to identify MD5 collisions.
+%{\color{red}
 
-What existing uses of MD5 would be broken. What would a malicious user be able to do?
-What would we use instead of MD5?
-Why would it be better? -> bigger output domain $2^128$ for MD5, $2^512$ for SHA-2.
-Better S-box (catchy name for the compression function (I think)) http://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/SHA-2.svg/400px-SHA-2.svg.png
+%Implications of quickly being able to identify MD5 collisions.
 
+%What existing uses of MD5 would be broken. What would a malicious user be able to do?
+%What would we use instead of MD5?
+%Why would it be better? -> bigger output domain $2^128$ for MD5, $2^512$ for SHA-2.
+%Better S-box (catchy name for the compression function (I think)) http://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/SHA-2.svg/400px-SHA-2.svg.png
 
+%}
 
 \subsection{Pre-image attacks}
 Producing and publishing a collision, may not present a security problem for many uses of hashes, producing a collision for a hashed password may be enough to enter a single system but doesn't necessarily give the attacker the plaintext password. The hashed information is still safe. Once victim to collision attacks most cryptographers will avoid a hash\cite{dontusemd5}, yet more crippling to the reputation of hashing function is a pre-image attack.
@@ -280,9 +283,9 @@ It isn't guaranteed that this search will be successful as multiple hashes are l
     \node[h] at (4*\sp,0) (hash4) {$h_{k-1}$};
     \node[p] at (5*\sp,0) (hash5) {$p_{k}$};
     \node[h] at (6*\sp,0) (hash6) {$h_{k}$};
-    \draw[->] (hash0) -- node[below] {\scriptsize{$R$}} (hash1);
-    \draw[->] (hash1) -- node[below] {\scriptsize{$H$}} (hash2);
-    \draw[->] (hash2) -- node[below] {\scriptsize{$R$}} (hash3);
+    \draw[->] (hash0) -- node[below] {\scriptsize{$H$}} (hash1);
+    \draw[->] (hash1) -- node[below] {\scriptsize{$R$}} (hash2);
+    \draw[->] (hash2) -- node[below] {\scriptsize{$H$}} (hash3);
     \draw[->] (hash4) -- node[below] {\scriptsize{$R$}} (hash5);
     \draw[->] (hash5) -- node[below] {\scriptsize{$H$}} (hash6);
     \draw[->] (hash6) -- node[below] {\scriptsize{$R$}} (hash7);
@@ -314,14 +317,11 @@ As the number of chains created increases the likelihood of collisions increases
     \node[p] at (-2*\sp,-1) (hash0) {$s$};
     \node[p] at (7*\sp,0) (hash7) {$e$};
     \node[h] at (-1*\sp,-1) (hash1) {$h_1$};
-    \node[p] at (0*\sp,-1) (hash2) {$p_2$};
-    \node[h] at (3*\sp,0) (hash3) {$h_2$};
+    \node[h] at (3*\sp,0) (hash3) {$h_c$};
     \node[h] at (4*\sp,0) (hash4) {$h_{k-1}$};
     \node[p] at (5*\sp,0) (hash5) {$p_{k}$};
     \node[h] at (6*\sp,0) (hash6) {$h_{k}$};
-    \draw[->] (hash0) -- node[below] {\scriptsize{$R$}} (hash1);
-    \draw[->] (hash1) -- node[below] {\scriptsize{$H$}} (hash2);
-    \draw[->] (hash2) -- node[below] {\scriptsize{$R$}} (hash3);
+    \draw[->] (hash0) -- node[below] {\scriptsize{$H$}} (hash1);
     \draw[->] (hash4) -- node[below] {\scriptsize{$R$}} (hash5);
     \draw[->] (hash5) -- node[below] {\scriptsize{$H$}} (hash6);
     \draw[->] (hash6) -- node[below] {\scriptsize{$R$}} (hash7);
@@ -331,17 +331,18 @@ As the number of chains created increases the likelihood of collisions increases
     \node[h] at (-1*\sp, 1) (hashp) {$h'_1$};
     \node[p] at (0*\sp, 1) (hashpa) {$p'_2$};
     \node[h] at (1*\sp, 1) (hashpa1) {$h'_2$};
-    \node[p] at (2*\sp, 1) (hashpa2) {$p'_3$};
+    \node[p] at (2*\sp, 0) (hashpa2) {$p'_c$};
+    \draw[->] (hash1) -- node[below] {\scriptsize{$R$}} (hashpa2);
     \node[] at (3*\sp, 1) (hashpb) {};
-    \draw[->] (hashp) -- node[below]{\scriptsize{$H$}} (hashpa);
+    \draw[->] (hashp) -- node[below]{\scriptsize{$R$}} (hashpa);
     \draw[->] (hashpa2) -- node[above]{\scriptsize{$R$}} (hash3);
-    \draw[->] (hashs) -- node[below]{\scriptsize{$R$}} (hashp);
-    \draw[->] (hashpa1) -- node[above]{\scriptsize{$H$}} (hashpa2);
-    \draw[->] (hashpa) -- node[below]{\scriptsize{$R$}} (hashpa1);
+    \draw[->] (hashs) -- node[below]{\scriptsize{$H$}} (hashp);
+    \draw[->] (hashpa1) -- node[above]{\scriptsize{$R$}} (hashpa2);
+    \draw[->] (hashpa) -- node[below]{\scriptsize{$H$}} (hashpa1);
 
 \end{tikzpicture}
 \end{center}
-\caption{This is a demonstration of two chains colliding, from the point where $H$ is applied to $p'_3$ no more useful work is performed by the chain starting at $s'$.}
+\caption{This is a demonstration of two chains colliding, from the point where $R$ is applied to $h'_2$ no more useful work is performed by the chain starting at $s'$.}
 \label{fig:col}
 \end{figure}
 
@@ -365,24 +366,24 @@ The original rainbow table paper demonstration, by Oechslin, constructed a rainb
 % Draw blocks, inputs and outputs
 
     \def\sp{1.5}
-    \node[p] at (-2*\sp,-1) (hash0) {$s$};
-    \node[p] at (7*\sp,1) (hashe1) {$e'$};
-    \node[p] at (7*\sp,-1) (hashe2) {$e$};
-    \node[h] at (-1*\sp,-1) (hash1) {$h_1$};
-    \node[p] at (0*\sp,-1) (hash2) {$p_2$};
-    \node[h] at (1*\sp,-1) (hash3) {$h_2$};
-    \node[p] at (-2*\sp,1) (hashs) {$s'$};
-    \node[p] at (4*\sp,-1) (hashb) {$p_3$};
-    \node[p] at (4*\sp,1)  (hashc) {$p'_2$};
+    \node[p] at (-2*\sp,1) (hash0) {$s$};
+    \node[p] at (7*\sp,-1) (hashe1) {$e'$};
+    \node[p] at (7*\sp,1) (hashe2) {$e$};
+    \node[h] at (-1*\sp,1) (hash1) {$h_1$};
+    \node[p] at (0*\sp,1) (hash2) {$p_2$};
+    \node[h] at (1*\sp,1) (hash3) {$h_2$};
+    \node[p] at (-2*\sp,-1) (hashs) {$s'$};
+    \node[p] at (4*\sp,1) (hashb) {$p_3$};
+    \node[p] at (4*\sp,-1)  (hashc) {$p'_2$};
 
-    \node[h] at (-1*\sp, 1) (hashp) {$h'_1$};
+    \node[h] at (-1*\sp, -1) (hashp) {$h'_1$};
     \node[p] at (2*\sp, 0) (hashpa2) {$p_c$};
-    \node[] at (3*\sp, 1) (hashpb) {};
-    \node[h] at (3*\sp,0) (hash6) {$h_{2}$};
+    \node[] at (3*\sp, -1) (hashpb) {};
+    \node[h] at (3*\sp,0) (hash6) {$h_c$};
     \draw[->] (hash0) -- node[below] {\scriptsize{$H$}} (hash1);
     \draw[->] (hash1) -- node[below] {\scriptsize{$R_1$}} (hash2);
     \draw[->] (hash2) -- node[below] {\scriptsize{$H$}} (hash3);
-    \draw[->] (hash3) -- node[below] {\scriptsize{$R_2$}} (hashpa2.west);
+    \draw[->] (hash3) -- node[above] {\scriptsize{$R_2$}} (hashpa2.west);
 
     \draw[->] (hashp) -- node[below]{\scriptsize{$R_1$}} (hashpa2.west);
     \draw[->] (hashpa2) -- node[below]{\scriptsize{$H$}} (hash6);
