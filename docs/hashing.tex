@@ -50,6 +50,7 @@
 %MD5 First announced in 1991
 
 \section{Hashing a message}
+\label{sec:propeties_of_a_hash}
 Hashing functions are able to take a variable length message and from it create a fixed length output. A hashing function will always hash the same input to the same output. The special type of hashing functions, discussed here are cryptographic hashing functions, these have additional properties which mean they are used in a range of security applications.
 
 A hashing function is a mapping for a binary string, $H$: $\{0,1\}^* \rightarrow \{0,1\}^n$, to create a fixed length digest. The number of distinct possible outputs of a hashing function of fixed length $L$ is $2^L$ theoretical digests. There are clearly vastly more valid inputs as the input may be of an arbitrary length, therefore there are necessarily collisions, due to the pigeon-hole effect. It is important however that there is no determinable connection between the message, $m$, and the digest, $H(m)$. $H$ should generate sufficiently random digests such that it fulfils three criteria:
@@ -61,7 +62,6 @@ A hashing function is a mapping for a binary string, $H$: $\{0,1\}^* \rightarrow
 
 A tasking being computationally infeasible refers to an adversary being unable to perform the action in a reasonable amount of time with reasonable resources.
 
-\label{sec:propeties_of_a_hash}
 
 \paragraph{The Random Oracle} An ideal fixed-length hashing function will play the role of a Random Oracle which  acts as a theoretically optimal cryptographic primitive. A Random Oracle, for a given input, produces a truly random output and the input and corresponding output are recorded. If the same input message is presented to the oracle at a later point the previously generated value is returned, however for each novel input presented a new random corresponding output will be generated.\\
 
@@ -150,12 +150,10 @@ Algorithm \ref{alg:hashing} shows the basic form of the MD construction. Though 
 As cryptanalysis has progressed the number of attacks on the MD construction itself has increased\cite{dobbertin}\cite{Xie2013}. It is important to note that these are not attacks on the specific compression functions used, though these also exist, but these attacks are directly against the MD structure and therefore would reduce the work needed to find collisions even using a perfect random-oracle for the compression function.
 
 \subsection{Length-Extension Attack}
+\label{sec:length}
 The first weakness of the simple MD construction is that once a single collision has been found it is trivial to find more\cite{Sasaki2006}. 
 
 Let $H: \{0,1\}^* \rightarrow \{0,1\}^n$ be a hashing function and two distinct messages $m_1$ and $m_2$ are a collision pair, that is $H(m_1) = H(m_2)$, under the simple MD construction it is trivial to generate more collisions by appending the collision-causing message with a common message $x$ producing $H(m_1||x)$, $H(m_2||x)$.  Where $||$ is the concatenation operator.
-
-
-\label{sec:length}
 
 \section{The MD5 Hashing Function}
 The MD5 hashing algorithm\cite{Rivest} created in 1992 is an MD based hashing function. It has been widely used across the internet to store password hashes and is still dominant in providing file checksums, even though it has been shown to be collision weak MD5 is till commonly used in many situations. In the following section the algorithm itself is described as per the specification laid out in RFC 1321 \cite{Rivest}. A clear python implementation is included at the end of this report, the intention is to demonstrate a simple implementation which is useful for education rather than speed of execution.
