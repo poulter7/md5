@@ -49,7 +49,7 @@
 %\cite{http://tools.ietf.org/html/rfc4270}
 %MD5 First announced in 1991
 
-\section{Hashing a message}
+\section{Hashing a Message}
 \label{sec:propeties_of_a_hash}
 Hashing functions are able to take a variable length message and from it create a fixed length output. A hashing function will always hash the same input to the same output. The special type of hashing functions, discussed here are cryptographic hashing functions, these have additional properties which mean they are used in a range of security applications.
 
@@ -75,7 +75,7 @@ The aim is to build a hashing function $H$ which takes an arbitrary length messa
 
 If a compression function $f$ is suitably provably random then it is possible to create a equally provably random $H$ by using the MD construction. The function takes a message an splits it into blocks of equal length therefore the construct only works on messages which have length, $L$ where $$L \equiv 0 \text{ (mod } n).$$
 
-\subsection{MD-Compliant padding}
+\subsection{MD-Compliant Padding}
 It is therefore necessary to apply padding to the original message. In the initial proposal Merkle simply padded the message with zeros\cite{Merkle1979}. This is sufficient to keep the important property of the construct, if $f$ is collision resistant, so is $H$, but more generally MD-compliant padding follows the following three rules. For messages $m$, $m_1$ and $m_2$ in the possible message space.
 \begin{itemize}
     \item $m$ must be a prefix of $\Pad(m)$.\\\emph{The padding must be applied to the end of the message.}
@@ -158,7 +158,7 @@ Let $H: \{0,1\}^* \rightarrow \{0,1\}^n$ be a hashing function and two distinct 
 \section{The MD5 Hashing Function}
 The MD5 hashing algorithm\cite{Rivest} created in 1992 is an MD based hashing function. It has been widely used across the internet to store password hashes and is still dominant in providing file checksums, even though it has been shown to be collision weak MD5 is till commonly used in many situations. In the following section the algorithm itself is described as per the specification laid out in RFC 1321 \cite{Rivest}. A clear python implementation is included at the end of this report, the intention is to demonstrate a simple implementation which is useful for education rather than speed of execution.
 
-\subsection{MD5 message preparation}
+\subsection{MD5 Message Preparation}
 The MD5 digest algorithm processes a $b$-bit original message.
 \paragraph{Padding}
 \label{sec:md5pad}
@@ -250,7 +250,7 @@ $5 \rightarrow D$: \texttt{1101} $\rightarrow$ \texttt{0101}.
 
 %}
 
-\subsection{Pre-image attacks}
+\subsection{Pre-image Attacks}
 Producing and publishing a collision, may not present a security problem for many uses of hashes, producing a collision for a hashed password may be enough to enter a single system but doesn't necessarily give the attacker the plaintext password. The hashed information is still safe. Once victim to collision attacks most cryptographers will avoid a hash\cite{Stevens}, yet more crippling to the reputation of the hashing function is a pre-image attack.
 
 For a given $H$: $\{0,1\}^* \rightarrow \{0,1\}^n$ a pre-image attack on a hash, $h$, is able to retrieve $m$ where $h = H(m)$. For an ideal $H$ (which strictly models a Random Oracle) a brute-force attack is necessary, for MD5 this should take $2^{128}$ evaluations of the MD5 function for an arbitrary $m$.
