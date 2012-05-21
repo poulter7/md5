@@ -28,7 +28,7 @@
 \tikzstyle{final} = [draw,fill=green!20,minimum size=2em]
 \tikzstyle{circle} = [draw,shape=circle,fill=red!20,minimum size=2em]
 \tikzstyle{branch}=[fill,shape=circle,minimum size=3pt,inner sep=0pt]
-\newcommand{\hash}[1]{#1}
+\newcommand{\hash}[1]{\ensuremath{H(#1)}}
 \newcommand{\Pad}{\text{Pad}}
 \newcommand{\HF}{HF}
 %opening
@@ -50,26 +50,30 @@
 %MD5 First announced in 1991
 
 \section{Hashing a message}
-Hashing functions are able to take a variable length message and from it create a fixed length output, a hashing function will always hash the same input to the same output. Cryptographic hashing functions, here-in simply  have two distinct properties which mean they are used in a range of security applications, they should be collision-free and one-way.
+Hashing functions are able to take a variable length message and from it create a fixed length output. A hashing function will always hash the same input to the same output. The special type of hashing functions, discussed here are cryptographic hashing functions, these have additional properties which mean they are used in a range of security applications.
 
- The number of distinct possible outputs of a hashing function of fixed length $L$ is $2^L$ theoretical digests. The are clearly vastly more valid inputs as the input may be of an arbitrary length, therefore there are necessarily collisions, due to the pigeon-hole effect. It is important however that there is no determinable connection between the message, $m$, and the digest, $H(m)$. $H$ should generate sufficiently random digests such that given:
+A hashing function is a mapping for a binary string, $H$: $\{0,1\}^* \rightarrow \{0,1\}^n$, to create a fixed length digest. The number of distinct possible outputs of a hashing function of fixed length $L$ is $2^L$ theoretical digests. There are clearly vastly more valid inputs as the input may be of an arbitrary length, therefore there are necessarily collisions, due to the pigeon-hole effect. It is important however that there is no determinable connection between the message, $m$, and the digest, $H(m)$. $H$ should generate sufficiently random digests such that it fulfills three criteria:
 \begin{itemize}
-  \item it should be hard to find some $m_1$ and $m_2$ where $m_1 \neq m_2$ and $H(m_1) = H(m_2)$, this is the \textbf{collision-free property}. This property is desirable because
+  \item it should be computationally infeasible to find some $m_1$ and $m_2$ where $m_1 \neq m_2$ and $H(m_1) = H(m_2)$, this is the \textbf{collision-free property}. This property is desirable because of hashes being used to distinguish input data. Collisions reduce the condifence one can have in a function for its ability to distinguish distinct inputs.
   \item given a digest $h$, it should be computationally infeasible to find any $m$ where $h = H(m)$. This is \textbf{first pre-image resistance}, this ensures it is difficult to retrieve a hashed message.
-  \item  an input $m_1$, and the digest $H(m_1)$ it should be infeasible to find a second message $m_2$ where $m_1 \neq m_2$ and $H(m_1) = H(m_2)$, this is \textbf{second pre-image resistance}. When a message and hash are found, it should be infeasible to find more messages which hash to the same value.
+  \item  an input $m_1$, and the digest $H(m_1)$ it should be computationally infeasible to find a second message $m_2$ where $m_1 \neq m_2$ and $H(m_1) = H(m_2)$, this is \textbf{second pre-image resistance}. When a message and hash are found, it should be infeasible to find more messages which hash to the same value.
 \end{itemize}
+
+A tasking being computationally infeasibile refers to an adversary being unable to perform the action in a reasonable amount of time with reasonable resources.
+
 \label{sec:propeties_of_a_hash}
 
-\paragraph{The Random Oracle} An ideal fixed-length hashing function will play the role of a Random Oracle. acts as a theoretically optimal cryptographic primitive. In a Random Oracle, for a given input a truly random output is chosen and the input and corresponding output are recorded. If the same input message is presented to the oracle at a later point the oracle will return the previously generated value, however for each novel input presented a random corresponding output will be generated.\\
+\paragraph{The Random Oracle} An ideal fixed-length hashing function will play the role of a Random Oracle which  acts as a theoretically optimal cryptographic primitive. A Random Oracle, for a given input, produces a truly random output and the input and corresponding output are recorded. If the same input message is presented to the oracle at a later point the previously generated value is returned, however for each novel input presented a new random corresponding output will be generated.\\
 
 
 
-There are many cryptographic hash functions, many vary in success at fulfilling the properties described. Yet they are integral cryptographic primitives on which many secure protocols are built. Successful cryptographic functions have many uses. In most operating systems user passwords are not stored in plain text, doing so would allow a user who maliciously gained access to the password store to know a user's password. Instead password hashes are stored and on login a user submits the password, which is hashed and verified against the stored hash, if these match then the user is authorised. Hashes are used for the signing digital documents and distinguish two large messages without having to do explicit bit-wise comparison between each document, this method provides a method of verifying another's copy of a file and is able to identify matches or inconsistencies.
+There are many cryptographic hash functions, many vary in success at fulfilling the properties described. Yet they are integral cryptographic primitives on which many secure protocols are built. Successful cryptographic functions have many uses. In most operating systems user passwords are not stored in plain text, doing so would allow a user who maliciously gained access to the password store to know a user's password. Instead password hashes are stored and on login a user submits the password, which is hashed and verified against the stored hash, if these match then the user is authorised. Hashes are used for the signing digital documents and distinguishing large files without having to do explicit bit-wise comparison between each file, this method provides a method of verifying another's copy of a file and is able to identify matches or inconsistencies.
 
 \section{The Merkle-Damg\r{a}rd Construction}
+Various constructs can build a hashing function, however the most popular over the last two decades, which is the construction underlying the most dominant hashes in use today, is the Merkle-Damg\r{a}rd (MD) construction \cite{Merkle1979}.
 The aim is to build a hashing function $H$ which takes an abitrary length message to create a digest, $\{0,1\}^* \xrightarrow{H} \{0,1\}^n$ in the same fashion as a random oracle would. In practice creating a straight-forward hashing or block cipher to take arbitrary input is impractical, most modern hashing functions, take some compression-function and repeatedly apply it to successive blocks of the message.
 
-If there is a compression function $f$ is suitably provably random then it is possible to create a equally provably random $H$ by using Merkle-Damg\r{a}rd (MD) construction \cite{Merkle1979}. The function taken a message an splits it into blocks of equal length therefore the construct only works on messages which have length, $L$ where $$L \equiv 0 \text{ (mod } n).$$
+If a compression function $f$ is suitably provably random then it is possible to create a equally provably random $H$ by using the MD construction. The function takes a message an splits it into blocks of equal length therefore the construct only works on messages which have length, $L$ where $$L \equiv 0 \text{ (mod } n).$$
 
 \subsection{MD-Compliant padding}
 It is therefore necessary to apply padding to the original message. In the initial proposal Merkle simply padded the message with zeros\cite{Merkle1979}. This is sufficient to keep the important property of the construct, if $f$ is collision resistant, so is $H$, but more generally MD-compliant padding follows the following three rules. For messages $m$, $m_1$ and $m_2$ in the possible message space.
@@ -80,7 +84,7 @@ It is therefore necessary to apply padding to the original message. In the initi
 \end{itemize}
 
 \subsection{The General Hashing Function}
-Algorithm \ref{alg:hashing} shows the basic form of the MD construction. Though many modern hashing algorithms are based on the MD principle, including the SHA series \cite{fips} of hashes, these often make changes to the construct to side-step specific vulnerabilities in the original design. Here $f$ can be any collision-resistant compression function and it will take an initialising vector and the current message block, $b_i$ and updates the IV to produce $H$, a collision-resistant hashing function. Figure \ref{fig:mdpic} illustrates the blocking of the original message, the presence of the padding element and the processing of the IVs.
+Algorithm \ref{alg:hashing} shows the basic form of the MD construction. Though many modern hashing algorithms are based on the MD principle, including the SHA series \cite{fips} of hashes, these often make changes to the construct to side-step specific vulnerabilities in the original design. Here $f$ can be any collision-resistant compression function which will take an initialising vector and the current message block, $b_i$ and produce a new IV vector for the construct on each iteration of the loop, a collision-resistant hashing function. Figure \ref{fig:mdpic} illustrates the blocking of the original message, the presence of the padding element and the processing of the IVs.
 
 \begin{algorithm}
     \caption{The Merkle-Damg\r{a}rd construction}
@@ -138,17 +142,18 @@ Algorithm \ref{alg:hashing} shows the basic form of the MD construction. Though 
 
 \end{tikzpicture}
 \end{center}
-\caption{The Merkle-Damg\r{a}rd construction, firstly the message is split into many blocks, each is sequentially processed by a compression function $f$ with some initial IV, $IV_0$, this produces new IV values, which are passed the the next usage of $f$. Finally the IVs are finalised using the MD padding block and the resulting IV is the given hash}
+\caption{The Merkle-Damg\r{a}rd construction: firstly the message is split into many blocks, each is sequentially processed by a compression function $f$ with some initial IV, $IV_0$, this produces new IV values, which are passed the the next usage of $f$. Finally the IVs are finalised using the MD padding block and the resulting IV is the given hash}
 \label{fig:mdpic}
 \end{figure}
 
 \subsection{Weaknesses of the MD Construction}
-As cryptanalysis has progressed the number of attacks on the MD construction itself has increased\cite{dobbertin}\cite{Xie2013}. It is important to note that these are not attacks on the specific compression functions used and direct attacks on MD and therefore would reduce the work needed to find collisions even using a random-oracle compression function.
+As cryptanalysis has progressed the number of attacks on the MD construction itself has increased\cite{dobbertin}\cite{Xie2013}. It is important to note that these are not attacks on the specific compression functions used, though these also exist, but these attacks are directly against the MD structure and therefore would reduce the work needed to find collisions even using a perfect random-oracle for the compression function.
 
 \subsection{Length-Extension Attack}
 The first weakness of the simple MD construction is that once a single collision has been found it is trivial to find more\cite{Sasaki2006}. 
 
 Let $H: \{0,1\}^* \rightarrow \{0,1\}^n$ be a hashing function and two distinct messages $m_1$ and $m_2$ are a collision pair, that is $H(m_1) = H(m_2)$, under the simple MD construction it is trivial to generate more collisions by appending the collision-causing message with a common message $x$ producing $H(m_1||x)$, $H(m_2||x)$.  Where $||$ is the concatenation operator.
+{\color{red} another attack}
 
 
 
@@ -165,17 +170,18 @@ A mandatory ``1'' bit is added to the end of the bit-string
 Padding ``0'' bits are added to the message to make the length, l, $$l \equiv 448 \text{ (mod } 512).$$
 
 \paragraph{Length appending}
-The message will be processed in blocks of 128-bits, to create a 128-bit ouput so the output congruent to 128-bit also. Also it is desirable to include the length-strengthening discussed in \ref{sec:length}. This has the ability to prevent some, which the MD construction is weak against. So the bit-string is appended with the 64-bit representation of the number $b$. Now, $$l \equiv 0 \text{ (mod } 512).$$
+The message will be processed in blocks of 128-bits, to create a 128-bit ouput so the message length must be a multiple of 128-bit also. Also it is desirable to include the length-strengthening discussed in \ref{sec:length}. This has the ability to prevent some attacks, which the MD construction is weak against. So the bit-string is appended with the 64-bit representation of the number $b$. Now, $$l \equiv 0 \text{ (mod } 512).$$
 
 \paragraph{IV intialisation}
-Once the message has been prepared the MD construction is prepared, the intial vector of the construct ($IV_0$) is
+Once the message has been prepared the MD construction is initialised, the intial vector of the construct ($IV_0$) is
 
 \begin{tabular}{ l l l l}
 	$A_0$ = \texttt{0x67452301}& $B_0$ = \texttt{0xefcdab89}& $C_0$ = \texttt{0x98badcfe}& $D_0$ = \texttt{0x10325476}
 \end{tabular}
 
 \subsection{The MD5 Compression Function}
-Once the message has been prepared the MD5 compression function is ran over the prepared message, 128-bits at a time. The compression function is illustrated in figure \ref{fig:md5comp} and is initliased to some given some IV, shown by $A, B, C, D$. $A$, from the IV is permuted by the function and the result is stored into the location of $B$. Firstly a non-linear combination of $B, C$ and $D$ is added, then the 32-bit block under consideration in the operation is added. A constant, derived from the $\sin$ function is added. $A$ is then subject to a left-bit rotation, by a varying number of places and then the contents of $B$ is also added. 64 varients of this operation are performed, they are grouped into blocks of 16, producing 4 `rounds'. It is important to note that all addition is modulo $2^{32}$, 32-bit addition.
+Once the message has been prepared the MD5 compression function is ran over the padded message, 128-bits at a time. The compression function is illustrated in figure \ref{fig:md5comp} and is initliased to some given some IV, shown by $A, B, C, D$. $A$, from the IV is permuted by the function and the result is stored into the location of $B$. Firstly a non-linear combination of $B, C$ and $D$ is added, then the 32-bit block under consideration in the operation is added. A constant, derived from the mathematical $\sin$ function is added. $A$ is then subject to a left-bit rotation, by a varying number of places and then the contents of $B$ is also added. 64 variants of this operation are performed, they are grouped into blocks of 16, producing 4 `rounds'. It is important to note that all addition is modulo $2^{32}$, 32-bit addition.
+The resulting hash is the concatenation of the IV components, $A || B || C || D$.
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{md5.png}
@@ -185,13 +191,13 @@ Once the message has been prepared the MD5 compression function is ran over the 
 
 \section{Attacking MD5}
 An attack on a hacking function attempts to circumvent the secure properties that a hashed message should have: the one-way property and the collision-free property, discussed in section \ref{sec:propeties_of_a_hash}.
-A firt pre-image attack focuses on finding a message which has a particular hash-value, therefore circumventing the one-way property and tries to find $m$ where $\hash{m}$ is known. A further attack, a \emph{second-preimage} attack, where the original message $m_1$ is known, attempts to find another message $m_2$ where $\hash{m1} = \hash{m2}$.
-A collision attack attempts to find any two arbitrary messages $m1$ and $m2$, where $\hash{m1} = \hash{m2}$.
+A first pre-image attack focuses on finding a message which has a particular hash-value, therefore circumventing the one-way property and tries to find $m$ where $\hash{m}$ is known. A further attack, a \emph{second-preimage} attack, where the original message $m_1$ is known, attempts to find another message $m_2$ where $\hash{m_1} = \hash{m_2}$.
+A collision attack attempts to find any two arbitrary messages $m_1$ and $m_2$, where $\hash{m_1} = \hash{m_2}$.
 
 \subsection{Collision Attacks}
-Hoffman,of the Network Working Group, in 2004 discussed that the dominant hashing attacks are collision attacks. Considering the `birthday problem' it is possible to estimate how many evaluations of the hash function it would take to find a collision in a given hashing function. Given a message space of  $2^n$, where $n = 128$ for MD5, the `birthday bound' for a binary string is $2^{(n/2)}$; $2^{64}$ for MD5. This is a theoretical bound and is reliant on the `perfection' of the hashing function, that is that each possible 128-bit output should be equally likely and there should be no inferable connection between input and output. 
+Hoffman,of the Network Working Group, in 2004 discussed that the dominant hashing attacks are collision attacks. Considering the `birthday problem' it is possible to estimate how many evaluations of the hash function it would take to find a collision in a given hashing function. Given a message space of  $2^n$, where $n = 128$ for MD5, the `birthday bound' for a binary string is $2^{(n/2)}$; $2^{64}$ for MD5. This is a theoretical bound on finding a collision in a random oracle. In practice this is reliant on the `perfection' of the hashing function, that is that each possible 128-bit output should be equally likely and there should be no inferable connection between input and output. 
 
-Although many collisions have now been found for the MD5 hash, the first publicly announced collision was from Dobbertin in 1996 \cite{dobbertin}. The MD5 function processes the message to be digested into 64-byte chunks (blocks) and the collision detailed by Dobbertin relies on using previous blocks to put initialisation vectors of the Merkle-Damgård construction into a specific state, from this state their are two distinct . This is not considered to be an attack on the full MD5 function; as a single message isn’t presented which causes a collision, but from 1996 the MD5 construction has been widely considered `broken’ with respect to being collision-resistant.
+MD5 is not a perfect hashing function and many collisions have now been found, the first publicly announced collision was from Dobbertin in 1996 \cite{dobbertin}. The MD5 function processes the message to be digested into 64-byte chunks (blocks) and the collision detailed by Dobbertin relies on using previous blocks to put initialisation vectors of the MD construction into a specific state, from this state their are two distinct blocks which are able to cause a collision. This is not considered to be an attack on the full MD5 function; as a single message isn’t presented which causes a collision, but from 1996 the MD5 construction has been widely considered `broken’ with respect to being collision-resistant.
 
 \begin{figure}
 \begin{tabular}{|r|  l l l l|}
@@ -204,10 +210,11 @@ Although many collisions have now been found for the MD5 hash, the first publicl
 	MD5: & \multicolumn{4}{l|}{\texttt{0xBF90E670 0x752AF92B 0x9CE4E3E1 0xB12CF8DE}}
 \end{tabular}
 \caption{The collision demonstrated by Dobbertin\cite{dobbertin}. This demonstrates a ``collision of the compress function'' and not on the full hash itself as it relies on getting the algorithm into a point of using these IVs.}
+\label{fig:coldob}
 
 \end{figure}
 
-There have been many distributed project which have tasked themselves with finding MD5 collisions on the full algorithm and the first of this to report results was MD5CRK\cite{Wang2004}. This project yielded two full colliding message pairs for the MD5 algorithm and also collisions for the MD4, RIPEMD and HAVAL-128 protocols. Each message presented for MD5 was made of two blocks, each first block was identical and has the effect of forcing the MD construction into using a fixed IV while processing the second block which can be given two distinct blocks and still produce the same hash. The MD5CRK algorithm spent the majority of its time finding a block which is able to generate an exploitable IV, after this is found it took very little time to produce a second block which is able to break collision-resistance.
+There have been many distributed projects which have tasked themselves with finding MD5 collisions on the full algorithm and the first of these to report results was MD5CRK\cite{Wang2004}. This project yielded two full colliding message pairs for the MD5 algorithm, one is shown in figure \ref{fig:coldob}. Collisions were also presented for the MD4, RIPEMD and HAVAL-128 protocols. Each message presented for MD5 was made of two blocks, each first block was identical and had the effect of forcing the MD construction into using a fixed IV while processing the second block which can be given two distinct blocks and still produce the same hash. The MD5CRK algorithm spent the majority of its time finding a block which is able to generate an exploitable IV, after this is found it took very little time to produce a second block which is able to break collision-resistance.
 
 %{\color{red}
 %Tunneling
@@ -215,7 +222,7 @@ There have been many distributed project which have tasked themselves with findi
 %The  \cite{Klima2006} presented tunnelling 
 %}
 
-The same group, 6 years later presented the first public MD5 collision using a single block \cite{Xie2013}.
+The same group, 6 years later presented the first public MD5 collision using a single block \cite{Xie2013}, this collision is shown in figure \ref{fig:colxie}. The implocation of being able to generate these collisions easily has already been exploited, most notoriously in the production of fake signed website certificates \cite{Stevens}, as this becomes more feasible and computational tractable the chance of generating even more `useful' collisions increases. A useful collision is not only a collision in the compression function, but a collision which can be used for some form of gain.
 \begin{figure}
 \begin{tabular}{|r|  l l l l|}
 $M_0$:& $X_0$ = \texttt{0x6165300E} & $X_4$ = \texttt{0x6503CF04} & $X_8$ = \texttt{0x2F94CC40} & $X_{12}$ = \texttt{0x6D658673} \\
@@ -233,6 +240,7 @@ $M_1$:& $X_0$ = \texttt{0x6165300E} & $X_4$ = \texttt{0x6503CF04} & $X_8$ = \tex
 \caption{The single-block collision demonstrated by Xie\cite{Xie2013}. Modified bits are underlined, this entire collision actually only differs by two bits.\\$0 \rightarrow 4$: \texttt{0000} $\rightarrow$ \texttt{0100} and 
 $5 \rightarrow D$: \texttt{1101} $\rightarrow$ \texttt{0101}.
 }
+\label{fig:colxie}
 \end{figure}
 
 %{\color{red}
@@ -247,9 +255,9 @@ $5 \rightarrow D$: \texttt{1101} $\rightarrow$ \texttt{0101}.
 %}
 
 \subsection{Pre-image attacks}
-Producing and publishing a collision, may not present a security problem for many uses of hashes, producing a collision for a hashed password may be enough to enter a single system but doesn't necessarily give the attacker the plaintext password. The hashed information is still safe. Once victim to collision attacks most cryptographers will avoid a hash\cite{Stevens}, yet more crippling to the reputation of hashing function is a pre-image attack.
+Producing and publishing a collision, may not present a security problem for many uses of hashes, producing a collision for a hashed password may be enough to enter a single system but doesn't necessarily give the attacker the plaintext password. The hashed information is still safe. Once victim to collision attacks most cryptographers will avoid a hash\cite{Stevens}, yet more crippling to the reputation of the hashing function is a pre-image attack.
 
-For a given $H$: $\{0,1\}^* \rightarrow \{0,1\}^n$ a pre-image attack on a hash, $h$ requires retrieving $m$ where $h = H(m)$. For an ideal $H$ (which strictly models a Random Oracle) a brute-force attack is necessary, for MD5 this should take $2^{128}$ evaluations of the MD5 function for an arbitrary $m$.
+For a given $H$: $\{0,1\}^* \rightarrow \{0,1\}^n$ a pre-image attack on a hash, $h$, is able to retrieve $m$ where $h = H(m)$. For an ideal $H$ (which strictly models a Random Oracle) a brute-force attack is necessary, for MD5 this should take $2^{128}$ evaluations of the MD5 function for an arbitrary $m$.
 
 Performing pre-image attacks on arbitrary hashes is clearly a time-consuming task it is therefore desirable to perform some pre-computation to make performing multiple attacks faster, this time-memory tradeoff attempts to save chains of hashes which cover all of a sub-space of the entire message-space. 
 
@@ -258,14 +266,14 @@ For a hash $H$: $\{0,1\}^* \rightarrow \{0,1\}^n$ and a finite password set $P$;
 \paragraph{Hash chain tables}
 Instead a reduction function $R$ is produced to take a hash and produce a new message from it, where $h \in H$ and $p \in P$. $R$ produces the mapping $h \rightarrow p$, this allows for an alternating chain of \emph{message to hash to message\dots} to be produced.
 
-To generate a hash-chain table\cite{Hellman1980}, a random set of passwords from P is selected. Each of these is hashed, then the resulting hash is gien to the reduction function. This is hashed, this process is repeated $k$ times, this is the chain length. Instead of storing the entire chain, simple the starting point and the last password are stored. 
+To generate a hash-chain table\cite{Hellman1980}, a random set of passwords from P is selected. Each of these is hashed, then the resulting hash is gien to the reduction function, this is then hashed, this process is repeated $k$ times, where $k$ is the chain length. Instead of storing the entire chain, simply the starting point and the last password are stored. 
 \begin{center}
     password $\xrightarrow{H}$ \textsc{2867c6a4} $\xrightarrow{R}$ tadcaacc $\cdots$ nomzyaw$\xrightarrow{H}$ 3b5440e1 $\xrightarrow{R}$ bffbbecf
 \end{center}
-Here only `password' and `betaffbbecf' need to be stored to retrace every password seen while creating the table.
+Here only `password' and `bffbbecf' need to be stored to retrace every hash, and thefore generating password, seen while creating the table.
 
-To use the table to attack a hash $h$, firstly the hash is passed through the reduction function, to produce a candidate password $p$, if this $p$ appears in the set of endpoints of the table then the corresponding starting password is selected and the series of hash-reductions is applied until the original $h$ is seen, the $p$ which generated $h$ is the plaintext preceding $h$ in the chain. 
-It isn't guaranteed that this search will be successful as multiple hashes are likely to reduce to the same $p$, this is illustrated in figure \ref{fig:col}.
+To use the table to attack a hash $h$, firstly the hash is passed through the reduction function, to produce a candidate password $p$. If this $p$ appears in the set of endpoints of the table then the corresponding starting password is selected and the series of hash-reductions is applied until the original $h$ is seen, the $p$ which generated $h$ is the plaintext preceding $h$ in the chain. 
+It isn't guaranteed that this search will be successful as multiple hashes are likely to reduce to the same $p$, this is illustrated in figure \ref{fig:table}. If unsuccessful further hash-reducing is performed on $h$ until a chain of length $k$ is reached. If the hash is not discovered before reaching $k$, then the hash was never seen during the creation of the table and the search has failed.
 \begin{figure}
     \begin{center}
     \begin{tikzpicture}[>=latex']
@@ -303,7 +311,7 @@ It isn't guaranteed that this search will be successful as multiple hashes are l
 \label{fig:table}
 \end{figure}
 
-As the number of chains created increases the likelihood of collisions increases also. A collision occurs when to chains produce the same value and continue hashing, this is likely to be due to a collision on the password, as hashing functions are generally considered to be collision resistant.
+As the number of chains created increases the likelihood of collisions increases also. A collision occurs when two chains produce the same value and continue hashing, this is likely to be due to password collision because of the reduction function, as hashing functions are generally considered to be collision resistant.
 \begin{figure}
     \begin{center}
     \begin{tikzpicture}[>=latex']
@@ -343,18 +351,18 @@ As the number of chains created increases the likelihood of collisions increases
 \label{fig:col}
 \end{figure}
 
-Selecting an appropriate reduction function is a critical part of the design of a hash-chain table. It is important to know a lot about the possible possword domain as constraining the search to this area will be more useful and a smaller table may be generated covering the likely password space with less gaps, increasing the chance of finding the hash and its inverse. It is also important to generate the correct distribution of messages, it may be inefficient to create many short passwords if the space is up to 9 character for example. Needless to say designing an appropriate reduction function is difficult.
+Selecting an appropriate reduction function is a critical part of the design of a hash-chain table. It is important to know a lot about the possible password domain as constraining the search to this area will be more useful and generating a smaller table while covering the likely password space with less gaps, increasing the chance of finding the hash and its inverse. It is also important to generate the correct distribution of messages, it may be inefficient to create many short passwords if the space is up to 9 character for example. Needless to say designing an appropriate reduction function is difficult.
 
 \paragraph{Rainbow Tables}
-The largest shortcoming of simple hash-chain tables is that the number of collisions increases as the table size increases. To counter-act this in 2003 Oechslin\cite{Oechslin} proposed a method for using multiple reduction function to drastically reduce the effect that a single collision has on the production of a chain in a table. This approach is called a rainbow table and is the dominant approach to launching pre-image attacks on hashing functions today.
+The largest shortcoming of simple hash-chain tables is that the number of collisions increases as the table size increases. To overcome this in 2003 Oechslin\cite{Oechslin} proposed a method for using multiple reduction functions to drastically reduce the effect that a single collision has on the production of a chain in a table. This approach is called a rainbow table and is the dominant approach to launching pre-image attacks on hashing functions today.
 
-A rainbow table has $k$ different reduction functions $R_k$ and these are applied sequentially, alternating between hash and reduction application. This greatly reduces the damage caused by a collision, the collisions will still occur as shown in figure \ref{rain}, but in the next step the application of a different reduction function will diverge the two chains. It is possible to still have a collision; if both chains merge on the same step, this will tie the two chains in to exploring the same state-space, but this is, much rarer than the collision case in the simple hash-chain table.
+A rainbow table has $k$ different reduction functions $R_1 \rightarrow R_k$ and these are applied sequentially, alternating between hash and reduction application as in the hash-chain approach. This greatly reduces the damage caused by a collision. Collisions will still occur as shown in figure \ref{fig:rain}, but in the next step the application of a different reduction function will diverge the two chains again. It is possible to still have a collision which wastes the chain: if both chains merge on the same step, this will tie the two chains in to exploring the same state-space. This is much rarer than the collision case in the simple hash-chain table.
 
 Using a rainbow table is still quite simple, given a hash, $h$ to attack, the last reduction function, $R_k$ is applied and the table is searched for a chain which has a matching endpoint. This is an attempt at guessing that the hash was the last hash the table saw.
-If none is found then the preceeding reduction $R_{k-1}$ is applied, followed by the hash and $R_k$. This is a guess that the $h$ was the penultimate hash seen in each table chain. This continues until a hit is found. Once it is the starting point is selected and the chain is replayed until $h$ is found, the preceeding password is the password which hashed to $h$, much like the hash-chain table.
+If none is found then the preceeding reduction $R_{k-1}$ is applied, followed by the hash and $R_k$. This is a guess that the $h$ was the penultimate hash seen in each table chain. This continues until a hit is found in the set of endpoints. Once it is the starting point is selected and the chain is replayed until $h$ is found, the preceeding password is the password which hashed to $h$, as with the hash-chain table.
 
 
-The original rainbow table paper demonstration, by Oechslin, constructed a rainbow table and accompanying program to crack Windows passwords. The program and wider principle behind rainbow tables has been subsequently used to attempt to demonstrate the tractability of pre-image attacks given that distributed resources are now available. Projects including \texttt{freerainbowtables.com} use many clients to distribute the work of generating hash chains. These projects have created a wealth of tables which these writers believe, though they do not break the hash's cryptographic one-way nature, do undermine the security of existing hashes and should raise questions about the continued use of algorithms such as MD5.
+The original rainbow table paper demonstration, by Oechslin, constructed a rainbow table and accompanying program to crack Windows passwords. The program and wider principle behind rainbow tables has been subsequently used to demonstrate the tractability of pre-image attacks given that distributed resources are now available. Projects including \texttt{freerainbowtables.com} use many clients to distribute the work of generating hash chains. These projects have created a wealth of tables which these writers believe, though they do not break the hash's cryptographic one-way nature, do undermine the security of existing hashes and should raise questions about the continued use of algorithms such as MD5 and SHA-1.
 
 \begin{figure}
     \begin{center}
@@ -400,9 +408,9 @@ The original rainbow table paper demonstration, by Oechslin, constructed a rainb
 Pre-image attacks using tables are extremely effective at cracking hashes for passwords in the their password domain, however protecting stored passwords against these tables is simple.
 
 Instead of storing just the hash, $h$, of the password $p$ a salted hash is stored. Where $s$ is some fixed-known string (salt) a salted hash can simple be made by concatenating the hash and salt, $$h = H(p||s),$$ or $$h = H(H(p) || s).$$
-The salt need not be kept a secret as it should not be of little help when attempting to calculate a pre-image. It is feasible to create a hash table which takes into account this salt. Using a single salt however is not a particularly safe approach as a single hash table could release the passwords to an entire database. Usually a salted hash and the salt are stored together, but importantly a salt will ideally be different for each password, possibly the timestamp of sign-up for example, ensuring the individual salts ensures that a fresh table would have to be created to crack each password and this is simple a brute force approach.
+The salt need not be kept a secret as it should not be of little help when attempting to calculate a pre-image. It is feasible to create a hash table which takes into account a salt, so using a single salt is not a particularly safe approach as a single hash table could release the passwords to an entire database. Usually a salted hash and the salt are stored together, but importantly a salt will be different for each password, possibly the timestamp of a sign-up time for example. Ensuring the individual salts are different ensures that a fresh table would have to be created to crack each password and reduces any attack to a brute force approach, which is the best case.
 
-Another alternative would be to make the construction of such a table inconceivable. This can be achieved by a process called key-strectching. This process repeatedly applies the hashing function (often in excess of 1000) times to the password, this has the effect of increasing the amount of time it takes to compute each hash in the chain. This has a drastic impact on the total time taken to produce the table.This approach is susceptable to a very specific type of attack, one using custom hardware. 
+Another alternative defence would be to make the construction of such a table inconceivable. This can be achieved by a process called key-strectching. This process repeatedly applies the hashing function (often in excess of 1000) times to the password, this has the effect of increasing the amount of time it takes to compute each hash in the chain. This has a drastic impact on the total time taken to produce the table.This approach is susceptable to a very specific type of attack, one using custom hardware. 
 Using FPGAs it is possible to construct hardware circuit which are able to unroll these repetition loops and therefore circumvent the added complexity added by the repetition stretching, this is a very specialised attack however and only viable when a lot of information is known about the encryption system. The custom hardware necessary would be very expensive and approaches such as \textbf{scrypt}\cite{colin} which as part of their process deliberately inflate memory usage have been futher developed to make specialist hardware and parallelism a less viable option for producing large amounts of hashes.
 
 
