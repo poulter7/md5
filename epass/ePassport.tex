@@ -1,21 +1,31 @@
-\documentclass[12pt]{article}
+\documentclass[12pt]{article}                              
+\usepackage{listings}
 \usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
-\geometry{a4paper}                   % ... or a4paper or a5paper or ... 
+\geometry{a4paper}                   % \dots or a4paper or a5paper or \dots 
 %\geometry{landscape}                % Activate for for rotated page geometry
 \usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage[utf8x]{inputenc}
 \usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage{epstopdf}
+\usepackage{caption}
 \usepackage{color}
-\usepackage{amsmath}
 \usepackage{url}
-\usepackage{helvet} %To the untrained eye helvetica and arial are pretty much identical
-\renewcommand{\familydefault}{\sfdefault}
+%\usepackage{helvet} %To the untrained eye helvetica and arial are pretty much identical
+%\renewcommand{\familydefault}{\sfdefault}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usetikzlibrary{calc}
+\usepackage{color}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{amsmath}
 
-\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+%\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 
-\title{Near-field identities}
-\author{TEAM NAME\\Alan Saul, Toby Gilham, Jonathan Poulter}
+\title{Near-Field Identities}
+\author{JAT - Just After Time: always-late compilation\\Toby Gilham, Jonathan Poulter and Alan Saul}
 \date{}                                           % Activate to display a given date or no date
 
 \begin{document}
@@ -317,41 +327,41 @@ We hope that this survey has opened your eyes to not just the technical details 
 \bibliography{mybib}
 \bibliographystyle{plain}
  
-\newpage
-Useful bits:
+%\newpage
+%Useful bits:
 
-PKI:
-http://www.jrpit.acs.org.au/jrpit/JRPITVolumes/JRPIT40/JRPIT40.3.187.pdf
+%PKI:
+%http://www.jrpit.acs.org.au/jrpit/JRPITVolumes/JRPIT40/JRPIT40.3.187.pdf
 
-EAC:
-{\color{red}{
-Maybe try make an implementation of a simple PKI with python?
+%EAC:
+%{\color{red}{
+%Maybe try make an implementation of a simple PKI with python?
 
-For comparing v1 v2 etc:
-http://eprint.iacr.org/2010/103.pdf
+%For comparing v1 v2 etc:
+%http://eprint.iacr.org/2010/103.pdf
 
-For overview of PKI authentication method
-http://www.cryptomathic.com/media/12100/cryptomathic\%20cvca-dvca\%20product\%20sheet.pdf 
+%For overview of PKI authentication method
+%http://www.cryptomathic.com/media/12100/cryptomathic\%20cvca-dvca\%20product\%20sheet.pdf 
 
-Paper with EAC description, CA and TA, and vulnerabilities!
-http://www.springerlink.com/content/n478131u3xv35062/fulltext.pdf 
+%Paper with EAC description, CA and TA, and vulnerabilities!
+%http://www.springerlink.com/content/n478131u3xv35062/fulltext.pdf 
 
-Diagrams
-http://www.cryptomathic.com/media/12100/cryptomathic\%20cvca-dvca\%20product\%20sheet.pdf
-http://www.secunet.com/fileadmin/user\_upload/Download/Printmaterial/Factsheets/englisch/sn\_eID-PKI-Suite\_FS\_E.pdf	
-http://www.jrpit.acs.org.au/jrpit/JRPITVolumes/JRPIT40/JRPIT40.3.187.pdf
-}}
+%Diagrams
+%http://www.cryptomathic.com/media/12100/cryptomathic\%20cvca-dvca\%20product\%20sheet.pdf
+%http://www.secunet.com/fileadmin/user\_upload/Download/Printmaterial/Factsheets/englisch/sn\_eID-PKI-Suite\_FS\_E.pdf	
+%http://www.jrpit.acs.org.au/jrpit/JRPITVolumes/JRPIT40/JRPIT40.3.187.pdf
+%}}
 
 
-CA:
-{\color{red}{http://www.informatik.tu-darmstadt.de/fileadmin/user\_upload/Group\_TRUST/PubsPDF/BPSV08.pdf
-https://www.bsi.bund.de/EN/Topics/ElectrIDDocuments/SecurityMechanisms/securEAC/securCA/ca\_node.html}}
+%CA:
+%{\color{red}{http://www.informatik.tu-darmstadt.de/fileadmin/user\_upload/Group\_TRUST/PubsPDF/BPSV08.pdf
+%https://www.bsi.bund.de/EN/Topics/ElectrIDDocuments/SecurityMechanisms/securEAC/securCA/ca\_node.html}}
 
-Discussion:
-{\color{red}{Provides information on which countries have what on their passports/ID cards
-http://ftp.jrc.es/EURdoc/JRC48622.pdf}}
+%Discussion:
+%{\color{red}{Provides information on which countries have what on their passports/ID cards
+%http://ftp.jrc.es/EURdoc/JRC48622.pdf}}
 
-LDS:
-{\color{red}{Image - maybe steal the figure from: E-Passports as a Means Towards the First World-Wide Public Key Infrastructure}}
+%LDS:
+%{\color{red}{Image - maybe steal the figure from: E-Passports as a Means Towards the First World-Wide Public Key Infrastructure}}
 
 \end{document}  
