@@ -32,16 +32,13 @@
 \newcommand{\Pad}{\text{Pad}}
 \newcommand{\HF}{HF}
 %opening
-\title{}
-\author{Jonathan Poulter}
+\title{Cracking Hasing Functions}
+\author{Toby Gilham, Jonathan Poulter and Alan Saul}
+\date{}
 
 \begin{document}
 
 \maketitle
-
-\begin{abstract}
-
-\end{abstract}
 
 %\section{Properties of a hashing function}
 
@@ -250,7 +247,7 @@ $5 \rightarrow D$: \texttt{1101} $\rightarrow$ \texttt{0101}.
 %}
 
 \subsection{Pre-image attacks}
-Producing and publishing a collision, may not present a security problem for many uses of hashes, producing a collision for a hashed password may be enough to enter a single system but doesn't necessarily give the attacker the plaintext password. The hashed information is still safe. Once victim to collision attacks most cryptographers will avoid a hash\cite{dontusemd5}, yet more crippling to the reputation of hashing function is a pre-image attack.
+Producing and publishing a collision, may not present a security problem for many uses of hashes, producing a collision for a hashed password may be enough to enter a single system but doesn't necessarily give the attacker the plaintext password. The hashed information is still safe. Once victim to collision attacks most cryptographers will avoid a hash\cite{Stevens}, yet more crippling to the reputation of hashing function is a pre-image attack.
 
 For a given $H$: $\{0,1\}^* \rightarrow \{0,1\}^n$ a pre-image attack on a hash, $h$ requires retrieving $m$ where $h = H(m)$. For an ideal $H$ (which strictly models a Random Oracle) a brute-force attack is necessary, for MD5 this should take $2^{128}$ evaluations of the MD5 function for an arbitrary $m$.
 
@@ -268,7 +265,7 @@ To generate a hash-chain table\cite{Hellman1980}, a random set of passwords from
 Here only `password' and `betaffbbecf' need to be stored to retrace every password seen while creating the table.
 
 To use the table to attack a hash $h$, firstly the hash is passed through the reduction function, to produce a candidate password $p$, if this $p$ appears in the set of endpoints of the table then the corresponding starting password is selected and the series of hash-reductions is applied until the original $h$ is seen, the $p$ which generated $h$ is the plaintext preceding $h$ in the chain. 
-It isn't guaranteed that this search will be successful as multiple hashes are likely to reduce to the same $p$, this is illustrated figure \ref{fig:col}.
+It isn't guaranteed that this search will be successful as multiple hashes are likely to reduce to the same $p$, this is illustrated in figure \ref{fig:col}.
 \begin{figure}
     \begin{center}
     \begin{tikzpicture}[>=latex']
@@ -351,7 +348,7 @@ Selecting an appropriate reduction function is a critical part of the design of 
 \paragraph{Rainbow Tables}
 The largest shortcoming of simple hash-chain tables is that the number of collisions increases as the table size increases. To counter-act this in 2003 Oechslin\cite{Oechslin} proposed a method for using multiple reduction function to drastically reduce the effect that a single collision has on the production of a chain in a table. This approach is called a rainbow table and is the dominant approach to launching pre-image attacks on hashing functions today.
 
-A rainbow table has $k$ different reduction functions $R_k$ and these are applied sequentially, alternating between hash and reduction application. This greatly reduces the damage caused by a collision, the collisions will still occur as shown in fiure \ref{rain}, but in the next step the application of a different reduction function will diverge the two chains. It is possible to still have a collision; if both chains merge on the same step, this will tie the two chains in to exploring the same state-space, but this is, much rarer than the collision case in the simple hash-chain table.
+A rainbow table has $k$ different reduction functions $R_k$ and these are applied sequentially, alternating between hash and reduction application. This greatly reduces the damage caused by a collision, the collisions will still occur as shown in figure \ref{rain}, but in the next step the application of a different reduction function will diverge the two chains. It is possible to still have a collision; if both chains merge on the same step, this will tie the two chains in to exploring the same state-space, but this is, much rarer than the collision case in the simple hash-chain table.
 
 Using a rainbow table is still quite simple, given a hash, $h$ to attack, the last reduction function, $R_k$ is applied and the table is searched for a chain which has a matching endpoint. This is an attempt at guessing that the hash was the last hash the table saw.
 If none is found then the preceeding reduction $R_{k-1}$ is applied, followed by the hash and $R_k$. This is a guess that the $h$ was the penultimate hash seen in each table chain. This continues until a hit is found. Once it is the starting point is selected and the chain is replayed until $h$ is found, the preceeding password is the password which hashed to $h$, much like the hash-chain table.
@@ -421,7 +418,7 @@ There are two types of Power Attacks using Simple Power Analysis(SPA) is just wa
     \caption{Trace showing a SPA of an entire DES operation.}
     \label{fig:desRound}
 \end{figure}
-The other type is a Differential Power Analysis where many different checks are used and then a difference is applied to only show the 'significant' changes. Looking at DES in a round of the encryption the 8 S-Boxes each take 6 subkey bits and 6 bits of the R side and produce 4 bits of output as described in \cite{otherPaper}. The selection function $D(C,b,K_s)$ is defined as the value of the bit $0 \le b < 32$ of the DES L side before working out the 16th round for the cipher text $C$, where the 6 key bits entering the S box corresponding to the bit $b$ are $0 \le K_s < 2^6$. If we have the wrong key bits we will get the bit $b$ right half of the time due to chance. 
+The other type is a Differential Power Analysis where many different checks are used and then a difference is applied to only show the `significant' changes. Looking at DES in a round of the encryption the 8 S-Boxes each take 6 subkey bits and 6 bits of the R side and produce 4 bits of output as described in \cite{otherPaper}. The selection function $D(C,b,K_s)$ is defined as the value of the bit $0 \le b < 32$ of the DES L side before working out the 16th round for the cipher text $C$, where the 6 key bits entering the S box corresponding to the bit $b$ are $0 \le K_s < 2^6$. If we have the wrong key bits we will get the bit $b$ right half of the time due to chance. 
 
 To use the DPA attack first takes $m$ samples of cipher text and power traces $T_{1..m}[1..k]$ containing $k$ samples each and evaluates $D$ for them and seperates them into two groups $g_0$ and $g_1$ where the evaluations for $b$ are 0 and 1 respectivly. Then $\Delta_D$ is worked out for the means of the traces from $g_0$ and $g_1$. Then $\Delta_D[j]$ is the average over $C_{1..m}$ of the change due to the value of the selection function $D$ on the power consumption at point $j$. 
 \begin{align}
