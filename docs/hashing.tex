@@ -146,7 +146,7 @@ Algorithm \ref{alg:hashing} shows the basic form of the MD construction. Though 
 \end{figure}
 
 \subsection{Weaknesses of the MD Construction}
-As cryptanalysis has progressed the number of attacks on the MD construction itself has increased\cite{r1}\cite{r2}. It is important to note that these are not attacks on the specific compression functions used and direct attacks on MD and therefore would reduce the work needed to find collisions even using a random-oracle compression function.
+As cryptanalysis has progressed the number of attacks on the MD construction itself has increased\cite{dobbertin}\cite{Xie2013}. It is important to note that these are not attacks on the specific compression functions used and direct attacks on MD and therefore would reduce the work needed to find collisions even using a random-oracle compression function.
 
 \subsection{Length-Extension Attack}
 The first weakness of the simple MD construction is that once a single collision has been found it is trivial to find more\cite{Sasaki2006}. 
@@ -210,7 +210,7 @@ Although many collisions have now been found for the MD5 hash, the first publicl
 
 \end{figure}
 
-There have been many distributed project which have tasked themselves with finding MD5 collisions on the full algorithm and the first of this to report results was MD5CRK\cite{cryptoeprint:2004:199}. This project yielded two full colliding message pairs for the MD5 algorithm and also collisions for the MD4, RIPEMD and HAVAL-128 protocols. Each message presented for MD5 was made of two blocks, each first block was identical and has the effect of forcing the MD construction into using a fixed IV while processing the second block which can be given two distinct blocks and still produce the same hash. The MD5CRK algorithm spent the majority of its time finding a block which is able to generate an exploitable IV, after this is found it took very little time to produce a second block which is able to break collision-resistance.
+There have been many distributed project which have tasked themselves with finding MD5 collisions on the full algorithm and the first of this to report results was MD5CRK\cite{Wang2004}. This project yielded two full colliding message pairs for the MD5 algorithm and also collisions for the MD4, RIPEMD and HAVAL-128 protocols. Each message presented for MD5 was made of two blocks, each first block was identical and has the effect of forcing the MD construction into using a fixed IV while processing the second block which can be given two distinct blocks and still produce the same hash. The MD5CRK algorithm spent the majority of its time finding a block which is able to generate an exploitable IV, after this is found it took very little time to produce a second block which is able to break collision-resistance.
 
 %{\color{red}
 %Tunneling
@@ -464,6 +464,9 @@ Another type of timing attack is due to how checks of equality of iterables are 
     \Return $(R_{w-1})$
 \end{algorithmic}
 \end{algorithm}
+
+\bibliography{library}
+\bibliographystyle{plain}
 
 Resources:
 
